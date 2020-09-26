@@ -1,6 +1,8 @@
 ﻿
 namespace TBD.Psi.Imaging.Windows
 {
+    using Microsoft.Psi;
+    using Microsoft.Psi.Imaging;
     using System;
     public static partial class ImagingOperators
     {
@@ -11,7 +13,7 @@ namespace TBD.Psi.Imaging.Windows
         /// <param name="quality">JPEG quality to use.</param>
         /// <param name="deliveryPolicy">An optional delivery policy.</param>
         /// <returns>A producer that generates the JPEG images.</returns>
-        public static IProducer<Shared<EncodedImage>> EncodeJpeg(this IProducer<Shared<Image>> source, int quality = 90, DeliveryPolicy<Shared<Image>> deliveryPolicy = null)
+        public static IProducer<Shared<EncodedImage>> EncodeJpegTurbo(this IProducer<Shared<Image>> source, int quality = 90, DeliveryPolicy<Shared<Image>> deliveryPolicy = null)
         {
             return source.Encode(new ImageToJpegStreamEncoder { QualityLevel = quality }, deliveryPolicy);
         }

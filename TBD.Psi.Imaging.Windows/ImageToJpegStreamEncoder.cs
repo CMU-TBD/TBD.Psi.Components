@@ -5,8 +5,9 @@
 namespace TBD.Psi.Imaging.Windows
 {
     using System.IO;
-    using System.Windows.Media.Imaging;
+    using System.Drawing.Imaging;
     using Microsoft.Psi.Imaging;
+    using System.Windows.Media.Imaging;
     using TurboJpegWrapper;
 
     /// <summary>
@@ -15,11 +16,10 @@ namespace TBD.Psi.Imaging.Windows
     public class ImageToJpegStreamEncoder : IImageToStreamEncoder
     {
         private TJCompressor compressor;
-        private TJSubsamplingOption options;
 
         public ImageToJpegStreamEncoder()
         {
-            this.compressor =  new TJCompressor();
+            this.compressor = new TJCompressor();
         }
 
         /// <summary>
@@ -30,20 +30,10 @@ namespace TBD.Psi.Imaging.Windows
         /// <inheritdoc/>
         public void EncodeToStream(Image image, Stream stream)
         {
-            var bitmapSource = BitmapSource.Create(
-                image.Width,
-                image.Height,
-                96,
-                96,
-                image.PixelFormat.ToWindowsMediaPixelFormat(),
-                null,
-                image.ImageData,
-                image.Stride * image.Height,
-                image.Stride);
-            
-            // encode it
-            var result = this.compressor.Compress(bitmapSource, this.options, this.QualityLevel, TJFlags.None);
-            stream.Write(result, 0, result.Count());
+            // compress
+            var result = this.compressor.Compress(image.ImageData, image.Stride, image.Width, image.Height, 
+                image.PixelFormat.ToSystemDrawingImagingPixelFormat(), TJSubsamplingOption.Chrominance444, this.QualityLevel, TJFlags.None);
+            stream.Write(result, 0, result.Length);
         }
     }
 }
