@@ -96,6 +96,38 @@ namespace TBD.Psi.RosBagStreamReader
             return (int)BitConverter.ToUInt32(data, 12 + offset) + 16 + offset;
         }
 
+
+        internal static string ReadMsgString(byte[] data, int offset = 0)
+        {
+            // get length
+            var strlen = (int)BitConverter.ToUInt32(data, offset);
+            // get the string
+            var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
+            return str;
+        }
+
+
+        internal static string ReadMsgString(byte[] data, out int nextOffset, int offset = 0)
+        {
+            // get length
+            var strlen = (int)BitConverter.ToUInt32(data, offset);
+            // get the string
+            var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
+            nextOffset = offset + 4 + strlen;
+            return str;
+        }
+
+        internal static (uint, DateTime, string) ReadStdMsgsHeader(byte[] data, out int nextOffset, int offset = 0)
+        {
+            var seq = BitConverter.ToUInt32(data, offset);
+            offset += 4;
+            var originTime = FromBytesToDateTime(data, offset);
+            offset += 8;
+            var frameId = ReadMsgString(data, out nextOffset, offset);
+            return (seq, originTime, frameId);
+        }
+
+
         internal static DateTime FromBytesToDateTime(byte[] timeBytes, int offset = 0)
         {
             var seconds = BitConverter.ToUInt32(timeBytes, offset);

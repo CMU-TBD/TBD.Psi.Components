@@ -7,8 +7,12 @@ using System.Linq;
 
 namespace TBD.Psi.RosBagStreamReader.Deserializers
 {
-    public class SensorMsgsImageDeserializer : IDeserializer
+    public class SensorMsgsImageDeserializer : MsgDeserializer
     {
+        public SensorMsgsImageDeserializer(bool useHeaderTime)
+            : base(typeof(Shared<Image>).AssemblyQualifiedName, "sensor_msgs/Image", useHeaderTime)
+        {
+        }
         private PixelFormat EncodingToPixelFormat(string encoding)
         {
             switch (encoding.ToUpper())
@@ -23,17 +27,19 @@ namespace TBD.Psi.RosBagStreamReader.Deserializers
             }
         }
 
-        public T deserialize<T>(byte[] data)
+        public override T Deserialize<T>(byte[] data, Envelope env)
         {
-            // get the location of the first byte after header
-            var info_index = Helper.PostHeaderPosition(data);
 
-            var height = (int) BitConverter.ToUInt32(data, info_index);
-            var width = (int) BitConverter.ToUInt32(data, info_index + 4);
-            var encodingStrLength = (int) BitConverter.ToUInt32(data, info_index + 8);
-            var encoding = Encoding.UTF8.GetString(data, info_index + 12, encodingStrLength);
+            // read the header and get location
+            (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var infoIndex, 0);
+            this.UpdateEnvelope(env, originTime);
+
+            var height = (int) BitConverter.ToUInt32(data, infoIndex);
+            var width = (int) BitConverter.ToUInt32(data, infoIndex + 4);
+            var encodingStrLength = (int) BitConverter.ToUInt32(data, infoIndex + 8);
+            var encoding = Encoding.UTF8.GetString(data, infoIndex + 12, encodingStrLength);
             // skip straight to the front of the array.
-            var imgData = data.Skip(info_index + 12 + 1 + 4 + 4 + encodingStrLength).ToArray();
+            var imgData = data.Skip(infoIndex + 12 + 1 + 4 + 4 + encodingStrLength).ToArray();
 
             var format = this.EncodingToPixelFormat(encoding);
             if (format == PixelFormat.Undefined)
@@ -48,16 +54,6 @@ namespace TBD.Psi.RosBagStreamReader.Deserializers
                 sharedImage.Resource.CopyFrom(imgData);
                 return (T) (Object) sharedImage.AddRef();
             }
-        }
-
-        public string getAssemblyName()
-        {
-            return typeof(Shared<Image>).AssemblyQualifiedName;
-        }
-
-        public string getMessageTypeName()
-        {
-            return "sensor_msgs/Image";
         }
     }
 }

@@ -1,7 +1,6 @@
 namespace TBD.Psi.RosBagStreamReader
 {
     using System;
-    using Microsoft.Psi;
     using Microsoft.Psi.Audio;
     public class RosStreamMetaData : StreamMetadataBase
     {

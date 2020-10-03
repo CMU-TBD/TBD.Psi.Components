@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -8,6 +8,10 @@
     <PackageReference Include="Microsoft.Psi.Data" Version="0.13.38.2-beta" />
     <PackageReference Include="Microsoft.Psi.Imaging" Version="0.13.38.2-beta" />
     <PackageReference Include="Microsoft.Psi.Runtime" Version="0.13.38.2-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Deserializers\AudioMsgs\" />
   </ItemGroup>
 
 </Project>

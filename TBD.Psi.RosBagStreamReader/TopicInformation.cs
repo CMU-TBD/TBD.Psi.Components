@@ -62,7 +62,7 @@ namespace TBD.Psi.RosBagStreamReader
         public Dictionary<string, List<(string, string)>> TopicDependencyTable;
 
         // topic connection Ids. The first is the id of the bag
-        public Dictionary<int, int> ConnectionIds = new Dictionary<int, int>();
+        public Dictionary<int, List<int>> ConnectionIds = new Dictionary<int, List<int>>();
 
         public Dictionary<int, List<long>> ChunkPointerList = new Dictionary<int, List<long>>();
 
@@ -81,7 +81,7 @@ namespace TBD.Psi.RosBagStreamReader
         public string CallerId { get; private set; } = String.Empty;
         public bool? Latching { get; private set; } = null;
         
-        public IDeserializer deserializer;
+        public MsgDeserializer deserializer;
 
         internal List<(string, string)> ParseIndividualDefinitionText(IEnumerable<string> sentences)
         {

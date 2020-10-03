@@ -7,16 +7,23 @@
     using Microsoft.Psi.Imaging;
     using System.IO;
 
-    public class SensorMsgsCompressedImageDeserializer : IDeserializer
+    public class SensorMsgsCompressedImageDeserializer : MsgDeserializer
     {
-        public T deserialize<T>(byte[] data)
+        public SensorMsgsCompressedImageDeserializer(bool useHeaderTime)
+            : base(typeof(Shared<Image>).AssemblyQualifiedName, "sensor_msgs/CompressedImage", useHeaderTime)
+        { 
+        }
+
+        public override T Deserialize<T>(byte[] data, Envelope env)
         {
-            var postHeaderPoint = Helper.PostHeaderPosition(data);
+            // read the header and get location
+            (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var offset, 0);
+            this.UpdateEnvelope(env, originTime);
 
-            var formatStrLength = (int)BitConverter.ToUInt32(data, postHeaderPoint);
-            var format = Encoding.UTF8.GetString(data, postHeaderPoint + 4, formatStrLength);
+            var formatStrLength = (int)BitConverter.ToUInt32(data, offset);
+            var format = Encoding.UTF8.GetString(data, offset + 4, formatStrLength);
 
-            var dataArr = data.Skip(postHeaderPoint + formatStrLength + 4 + 4).ToArray();
+            var dataArr = data.Skip(offset + formatStrLength + 4 + 4).ToArray();
             var imageMemoryStream = new MemoryStream(dataArr);
             using (var image = System.Drawing.Image.FromStream(imageMemoryStream))
             {
@@ -27,16 +34,6 @@
                     return (T) (object) sharedImage.AddRef();
                 }
             }
-        }
-
-        public string getAssemblyName()
-        {
-            return typeof(Shared<Image>).AssemblyQualifiedName;
-        }
-
-        public string getMessageTypeName()
-        {
-            return "sensor_msgs/CompressedImage";
         }
     }
 }

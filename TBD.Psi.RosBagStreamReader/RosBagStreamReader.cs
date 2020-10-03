@@ -169,7 +169,7 @@ namespace TBD.Psi.RosBagStreamReader
             }
             this.outputs[name].Add((b, env) =>
             {
-                T output = deserializer.deserialize<T>(b);
+                T output = deserializer.Deserialize<T>(b, env);
                 // call action
                 target(output, env);
             });
@@ -178,10 +178,10 @@ namespace TBD.Psi.RosBagStreamReader
             return this.bagInterface.GetStreamMetaData().Where(m => m.Name == name).First();
         }
 
-        public T Read<T>(int bagIndex, long pointer, int length, IDeserializer deserializer)
+        public T Read<T>(int bagIndex, long pointer, int length, Envelope env, MsgDeserializer deserializer)
         {
             this.bagInterface.Read(bagIndex, pointer, length, out var dataArr);
-            return deserializer.deserialize<T>(dataArr);
+            return deserializer.Deserialize<T>(dataArr, env);
         }
 
         public IStreamMetadata OpenStreamIndex<T>(string name, Action<Func<IStreamReader, T>, Envelope> target)
@@ -197,7 +197,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.outputTargets[name].Add((bag, pointer, length, envelope) =>
             {
                 // return an Index function that actually reads the data when called.
-                target(new Func<IStreamReader, T>(reader => ((RosBagStreamReader)reader).Read<T>(bag, pointer, length, deserializer)), envelope);
+                target(new Func<IStreamReader, T>(reader => ((RosBagStreamReader)reader).Read<T>(bag, pointer, length, envelope, deserializer)), envelope);
             });
 
             return this.bagInterface.GetStreamMetaData().Where(m => m.Name == name).First();

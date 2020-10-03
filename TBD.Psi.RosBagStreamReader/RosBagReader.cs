@@ -15,7 +15,7 @@ namespace TBD.Psi.RosBagStreamReader
         private List<FileStream> bagFileStreams = new List<FileStream>();
         private Dictionary<string, TopicInformation> metaInformation = new Dictionary<string, TopicInformation>();
         private List<RosStreamMetaData> streamMetaList = new List<RosStreamMetaData>();
-        private Dictionary<string, IDeserializer> deserializers = new Dictionary<string, IDeserializer>();
+        private Dictionary<string, MsgDeserializer> deserializers = new Dictionary<string, MsgDeserializer>();
 
         private DateTime bagStartTime;
         private DateTime bagEndTime;
@@ -70,7 +70,11 @@ namespace TBD.Psi.RosBagStreamReader
                                 this.metaInformation[name] = new TopicInformation(headers, dataBytes);
                             }
                             // Add the connection ID of this topic for this bag into the list
-                            this.metaInformation[name].ConnectionIds.Add(bagIndex, connId);
+                            if (!this.metaInformation[name].ConnectionIds.ContainsKey(bagIndex))
+                            {
+                                this.metaInformation[name].ConnectionIds[bagIndex] = new List<int>();
+                            }
+                            this.metaInformation[name].ConnectionIds[bagIndex].Add(connId);
                             topicMapping[connId] = name;
                             break;
                         case 0x06: // 3.6 Chunk Information
@@ -131,26 +135,26 @@ namespace TBD.Psi.RosBagStreamReader
                     info.Value.deserializer = this.deserializers[info.Value.Type];
                     // generate all the information needed by the Psi Store
                     info.Value.sourceId = streamIds;
-                    var psiStreamMetaData = new RosStreamMetaData(info.Key, streamIds, info.Value.deserializer.getAssemblyName(),
+                    var psiStreamMetaData = new RosStreamMetaData(info.Key, streamIds, info.Value.deserializer.AssemblyName,
                         this.FirstBagName, this.BagDirectory, info.Value.StartTime, info.Value.EndTime, 0, info.Value.MessageCount, 0
                     );
-                    psiStreamMetaData.deserializeTypeName = info.Value.deserializer.getAssemblyName();
+                    psiStreamMetaData.deserializeTypeName = info.Value.deserializer.AssemblyName;
                     streamMetaList.Add(psiStreamMetaData);
                     streamIds++;
                 }
             }
         }
 
-        private void loadDeserializer(IDeserializer deserializer)
+        private void loadDeserializer(MsgDeserializer deserializer)
         {
-            this.deserializers[deserializer.getMessageTypeName()] = deserializer;
+            this.deserializers[deserializer.RosMessageTypeName] = deserializer;
         }
 
         private void loadDeserializers()
         {
             this.loadDeserializer(new StdMsgsStringDeserializer());
-            this.loadDeserializer(new SensorMsgsImageDeserializer());
-            this.loadDeserializer(new SensorMsgsCompressedImageDeserializer());      
+            this.loadDeserializer(new SensorMsgsImageDeserializer(true));
+            this.loadDeserializer(new SensorMsgsCompressedImageDeserializer(true));      
         }
 
         public IEnumerable<RosStreamMetaData> GetStreamMetaData() {
@@ -169,7 +173,7 @@ namespace TBD.Psi.RosBagStreamReader
             get => this.bagEndTime;
         }
 
-        public IDeserializer GetDeserializer(string topicName)
+        public MsgDeserializer GetDeserializer(string topicName)
         {
             return this.metaInformation[topicName].deserializer;
         }
@@ -228,7 +232,7 @@ namespace TBD.Psi.RosBagStreamReader
                 msgCount = BitConverter.ToInt32(indexHeader["count"], 0);
                 nextRecordPos = indexDataOffset + indexDataLen;
             }
-            while (topicInfo.ConnectionIds[topicInfo.bagIndex] != BitConverter.ToInt32(indexHeader["conn"], 0));
+            while (!topicInfo.ConnectionIds[topicInfo.bagIndex].Contains(BitConverter.ToInt32(indexHeader["conn"], 0)));
 
             // seek to the correct part
             this.bagFileStreams[topicInfo.bagIndex].Seek(indexDataOffset + topicInfo.ChunkMsgIndex * 12, SeekOrigin.Begin);
