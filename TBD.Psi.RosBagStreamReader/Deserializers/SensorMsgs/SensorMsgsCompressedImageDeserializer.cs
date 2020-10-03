@@ -14,11 +14,11 @@
         { 
         }
 
-        public override T Deserialize<T>(byte[] data, Envelope env)
+        public override T Deserialize<T>(byte[] data, ref Envelope env)
         {
             // read the header and get location
             (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var offset, 0);
-            this.UpdateEnvelope(env, originTime);
+            this.UpdateEnvelope(ref env, originTime);
 
             var formatStrLength = (int)BitConverter.ToUInt32(data, offset);
             var format = Encoding.UTF8.GetString(data, offset + 4, formatStrLength);

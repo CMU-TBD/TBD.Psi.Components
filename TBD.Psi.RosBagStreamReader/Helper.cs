@@ -36,7 +36,6 @@ namespace TBD.Psi.RosBagStreamReader
         {
             // reinitialize the filestream header from the beginning to the header.
             bagStream.Seek(offset, SeekOrigin.Begin);
-
             // read and parse the header
             var recordFieldProperties = ReadRecordHeader(bagStream);
 

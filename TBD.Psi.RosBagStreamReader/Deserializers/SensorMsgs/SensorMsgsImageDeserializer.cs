@@ -27,12 +27,12 @@ namespace TBD.Psi.RosBagStreamReader.Deserializers
             }
         }
 
-        public override T Deserialize<T>(byte[] data, Envelope env)
+        public override T Deserialize<T>(byte[] data, ref Envelope env)
         {
 
             // read the header and get location
             (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var infoIndex, 0);
-            this.UpdateEnvelope(env, originTime);
+            this.UpdateEnvelope(ref env, originTime);
 
             var height = (int) BitConverter.ToUInt32(data, infoIndex);
             var width = (int) BitConverter.ToUInt32(data, infoIndex + 4);

@@ -18,7 +18,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.RosMessageTypeName = messageName;
         }
 
-        protected void UpdateEnvelope(Envelope env, DateTime originTime)
+        protected void UpdateEnvelope(ref Envelope env, DateTime originTime)
         {
             if (this.useHeaderTimeAsOriginatingTime)
             {
@@ -26,7 +26,7 @@ namespace TBD.Psi.RosBagStreamReader
             }
         }
 
-        public abstract T Deserialize<T>(byte[] data, Envelope envelop);
+        public abstract T Deserialize<T>(byte[] data, ref Envelope envelop);
         public string AssemblyName { get; private set; }
         public string RosMessageTypeName { get; private set; }
     }

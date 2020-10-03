@@ -153,8 +153,13 @@ namespace TBD.Psi.RosBagStreamReader
         private void loadDeserializers()
         {
             this.loadDeserializer(new StdMsgsStringDeserializer());
+            this.loadDeserializer(new StdMsgsBoolDeserializer());
             this.loadDeserializer(new SensorMsgsImageDeserializer(true));
             this.loadDeserializer(new SensorMsgsCompressedImageDeserializer(true));      
+            this.loadDeserializer(new AudioCommonMsgsAudioDataDeserializer());
+            this.loadDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
+            this.loadDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
+            this.loadDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
         }
 
         public IEnumerable<RosStreamMetaData> GetStreamMetaData() {
@@ -220,7 +225,6 @@ namespace TBD.Psi.RosBagStreamReader
             int msgCount = -1;
             byte[] indexDataBytes = new byte[12];
             byte[] intBytes = new byte[4];
-            Dictionary<string, byte[]> headerField;
 
             do
             {
@@ -244,8 +248,8 @@ namespace TBD.Psi.RosBagStreamReader
             var offset = BitConverter.ToInt32(indexDataBytes, 8);
             // now we can look into the chunk record and read data
             this.bagFileStreams[topicInfo.bagIndex].Seek(chuckDataOffset + offset, SeekOrigin.Begin);
-            // read header
-            headerField = Helper.ReadRecordHeader(this.bagFileStreams[topicInfo.bagIndex]);
+            // read header to progress the file stream 
+            Helper.ReadRecordHeader(this.bagFileStreams[topicInfo.bagIndex]);
             // get data len
             this.bagFileStreams[topicInfo.bagIndex].Read(intBytes, 0, 4);
 
