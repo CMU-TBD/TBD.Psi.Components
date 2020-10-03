@@ -16,6 +16,7 @@ namespace TBD.Psi.RosBagStreamReader
         private Dictionary<string, TopicInformation> metaInformation = new Dictionary<string, TopicInformation>();
         private List<RosStreamMetaData> streamMetaList = new List<RosStreamMetaData>();
         private Dictionary<string, MsgDeserializer> deserializers = new Dictionary<string, MsgDeserializer>();
+        private readonly object streamLock = new object();
 
         private DateTime bagStartTime;
         private DateTime bagEndTime;
@@ -187,9 +188,12 @@ namespace TBD.Psi.RosBagStreamReader
         {
             // TODO some kind of checking?
             result = new byte[length];
-            // move read header to that point
-            this.bagFileStreams[bagIndex].Seek(pointer, SeekOrigin.Begin);
-            this.bagFileStreams[bagIndex].Read(result, 0, length);
+            lock (this.streamLock)
+            {
+                // move read header to that point
+                this.bagFileStreams[bagIndex].Seek(pointer, SeekOrigin.Begin);
+                this.bagFileStreams[bagIndex].Read(result, 0, length);
+            }
             return true;
         }
 
@@ -215,10 +219,15 @@ namespace TBD.Psi.RosBagStreamReader
             }
 
             // read the chunk
-            ( _ , var chuckDataOffset, var chunkDataLen) = Helper.ReadNextRecord(this.bagFileStreams[topicInfo.bagIndex], topicInfo.ChunkPointerList[topicInfo.bagIndex][topicInfo.ChunkIndex]);
-
+            long nextRecordPos;
+            long chuckDataOffset;
+            long chunkDataLen;
+            lock (this.streamLock)
+            {
+                (_, chuckDataOffset, chunkDataLen) = Helper.ReadNextRecord(this.bagFileStreams[topicInfo.bagIndex], topicInfo.ChunkPointerList[topicInfo.bagIndex][topicInfo.ChunkIndex]);
+            }
             // read the info record proceeding the chunk
-            long nextRecordPos = chuckDataOffset + chunkDataLen;
+            nextRecordPos = chuckDataOffset + chunkDataLen;
             long indexDataOffset = -1;
             int indexDataLen = -1;
             Dictionary<string, byte[]> indexHeader;
@@ -228,7 +237,10 @@ namespace TBD.Psi.RosBagStreamReader
 
             do
             {
-                (indexHeader, indexDataOffset, indexDataLen) = Helper.ReadNextRecord(this.bagFileStreams[topicInfo.bagIndex], nextRecordPos);
+                lock (this.streamLock)
+                {
+                    (indexHeader, indexDataOffset, indexDataLen) = Helper.ReadNextRecord(this.bagFileStreams[topicInfo.bagIndex], nextRecordPos);
+                }
                 if (indexHeader["op"][0] != (byte)0x04)
                 {
                     throw new Exception($"Except to see Index data Record (0x04) but got {indexHeader["op"][0]}");
@@ -238,24 +250,31 @@ namespace TBD.Psi.RosBagStreamReader
             }
             while (!topicInfo.ConnectionIds[topicInfo.bagIndex].Contains(BitConverter.ToInt32(indexHeader["conn"], 0)));
 
-            // seek to the correct part
-            this.bagFileStreams[topicInfo.bagIndex].Seek(indexDataOffset + topicInfo.ChunkMsgIndex * 12, SeekOrigin.Begin);
-            // from the index, read the time and offset into chunk
-            this.bagFileStreams[topicInfo.bagIndex].Read(indexDataBytes, 0, 12);
+            lock (this.streamLock)
+            {
+                // seek to the correct part
+                this.bagFileStreams[topicInfo.bagIndex].Seek(indexDataOffset + topicInfo.ChunkMsgIndex * 12, SeekOrigin.Begin);
+                // from the index, read the time and offset into chunk
+                this.bagFileStreams[topicInfo.bagIndex].Read(indexDataBytes, 0, 12);
+            }
             // get the time and offset
             var messageTime = Helper.FromBytesToDateTime(indexDataBytes, 0);
             // get offset
             var offset = BitConverter.ToInt32(indexDataBytes, 8);
-            // now we can look into the chunk record and read data
-            this.bagFileStreams[topicInfo.bagIndex].Seek(chuckDataOffset + offset, SeekOrigin.Begin);
-            // read header to progress the file stream 
-            Helper.ReadRecordHeader(this.bagFileStreams[topicInfo.bagIndex]);
-            // get data len
-            this.bagFileStreams[topicInfo.bagIndex].Read(intBytes, 0, 4);
+
+            lock (this.streamLock)
+            {
+                // now we can look into the chunk record and read data
+                this.bagFileStreams[topicInfo.bagIndex].Seek(chuckDataOffset + offset, SeekOrigin.Begin);
+                // read header to progress the file stream 
+                Helper.ReadRecordHeader(this.bagFileStreams[topicInfo.bagIndex]);
+                // get data len
+                this.bagFileStreams[topicInfo.bagIndex].Read(intBytes, 0, 4);
+                pointer = this.bagFileStreams[topicInfo.bagIndex].Position;
+            }
 
             // set the outgoing variables
             length = BitConverter.ToInt32(intBytes, 0);
-            pointer = this.bagFileStreams[topicInfo.bagIndex].Position;
             bagIndex = topicInfo.bagIndex;
             envelope = new Envelope(messageTime, messageTime, topicInfo.sourceId, topicInfo.readCounter);
 
@@ -284,11 +303,11 @@ namespace TBD.Psi.RosBagStreamReader
 
         private long ReadSingleRosBagHeader(int streamIndex, long offset)
         {
-            (var header, _, _) = Helper.ReadNextRecord(this.bagFileStreams[streamIndex], offset);
-            // store the header information about the rosbag
-            // ConnCounts[streamIndex] = BitConverter.ToInt32(header["conn_count"], 0);
-            // ChunkCounts[streamIndex] = BitConverter.ToInt32(header["chunk_count"], 0);
-            return BitConverter.ToInt64(header["index_pos"], 0);
+            lock (this.streamLock)
+            {
+                (var header, _, _) = Helper.ReadNextRecord(this.bagFileStreams[streamIndex], offset);
+                return BitConverter.ToInt64(header["index_pos"], 0);
+            }
         }
     }
 }

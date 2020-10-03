@@ -161,7 +161,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.validateStreamNameAndType<T>(name);
 
             var deserializer = this.bagInterface.GetDeserializer(name);
-            subscribedTopics.Add(name, DateTime.MinValue);
+            this.subscribedTopics[name] = DateTime.MinValue;
             // TODO make this a list since there could be multiple subscribers.
             if (! this.outputs.ContainsKey(name))
             {
@@ -243,8 +243,18 @@ namespace TBD.Psi.RosBagStreamReader
             // restart all information
             foreach(var topic in this.subscribedTopics.Keys.ToList())
             {
+                // get stream meta data
+                var streamMeta = this.bagInterface.GetStreamMetaData().Where(m => m.Name == topic).First();
+
+                // check if any message is even in this interval
+                if (interval.Left > streamMeta.LastMessageCreationTime || interval.Right < streamMeta.FirstMessageCreationTime)
+                {
+                    this.subscribedTopics[topic] = DateTime.MaxValue;
+                    continue;
+                }
+
                 // set the new time
-                this.subscribedTopics[topic] = this.bagInterface.GetStreamMetaData().Where(m => m.Name == topic).First().FirstMessageOriginatingTime;
+                this.subscribedTopics[topic] = streamMeta.FirstMessageCreationTime;
 
                 // update baginterface
                 this.bagInterface.Seek(topic);
