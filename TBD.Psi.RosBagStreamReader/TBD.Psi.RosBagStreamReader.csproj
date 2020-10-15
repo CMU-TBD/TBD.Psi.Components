@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MathNet.Spatial.Signed" Version="0.6.0" />
     <PackageReference Include="Microsoft.Psi.Audio" Version="0.13.38.2-beta" />
     <PackageReference Include="Microsoft.Psi.Data" Version="0.13.38.2-beta" />
     <PackageReference Include="Microsoft.Psi.Imaging" Version="0.13.38.2-beta" />

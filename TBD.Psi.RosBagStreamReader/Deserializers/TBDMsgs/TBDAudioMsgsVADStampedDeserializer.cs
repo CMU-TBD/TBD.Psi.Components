@@ -1,5 +1,6 @@
 ﻿namespace TBD.Psi.RosBagStreamReader.Deserializers
 {
+    using System;
     using System.Linq;
     using Microsoft.Psi;
     using Microsoft.Psi.Audio;
@@ -16,7 +17,7 @@
             (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var offset, 0);
             this.UpdateEnvelope(ref envelop, originTime);
 
-            return (T)(object)new AudioBuffer(data.Skip(offset + 4).ToArray(), WaveFormat.Create16kHz1Channel16BitPcm());
+            return (T)(object)BitConverter.ToBoolean(data, offset);
         }
     }
 }

@@ -161,6 +161,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.loadDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
             this.loadDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
             this.loadDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
+            this.loadDeserializer(new GeometrymsgsPoseStampedDeserializer(true));
         }
 
         public IEnumerable<RosStreamMetaData> GetStreamMetaData() {

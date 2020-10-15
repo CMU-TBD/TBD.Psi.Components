@@ -87,7 +87,7 @@ namespace TBD.Psi.RosBagStreamReader
             return fieldProperties;
         }
 
-        internal static int PostHeaderPosition(byte[] data , int offset = 0)
+        internal static int PostHeaderPosition(byte[] data, int offset = 0)
         {
             // first 4 bytes is Uint32 sequence
             // next 8 bytes is time.
@@ -114,6 +114,28 @@ namespace TBD.Psi.RosBagStreamReader
             var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
             nextOffset = offset + 4 + strlen;
             return str;
+        }
+
+        internal static float ReadMsgFloat32(byte[] data, out int nextOffset, int offset = 0)
+        {
+            var val = BitConverter.ToSingle(data, offset);
+            nextOffset = offset + 4;
+            return val;
+        }
+
+        internal static double ReadMsgFloat64(byte[] data, out int nextOffset, int offset = 0)
+        {
+            var val = BitConverter.ToDouble(data, offset);
+            nextOffset = offset + 8;
+            return val;
+        }
+
+        internal static DateTime ReadMsgTime(byte[] data, out int nextOffset, int offset = 0)
+        {
+            var seconds = BitConverter.ToUInt32(data, offset);
+            var nanoSeconds = BitConverter.ToUInt32(data, offset + 4);
+            nextOffset = offset + 8;
+            return DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime + TimeSpan.FromTicks(nanoSeconds / 100);
         }
 
         internal static (uint, DateTime, string) ReadStdMsgsHeader(byte[] data, out int nextOffset, int offset = 0)
