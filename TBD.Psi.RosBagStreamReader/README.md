@@ -27,6 +27,7 @@ You can also add the `dll` to PsiStudio to enable direct reading of ROSBAGs in P
 |sensor_msgs/CompressedImage| `Shared<Image>` |Only some formats are supported|
 |geometry_msgs/PoseStamped| `Coordinate Systems` ||
 |audio_common_msgs/AudioData| `AudioBuffer` ||
+
 Contributions for more Deserializers are welcomed!
 
 ## Build your own Deserializers
