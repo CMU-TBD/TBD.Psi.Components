@@ -8,32 +8,33 @@ namespace TBD.Psi.Imaging.Windows
     using System.Drawing.Imaging;
     using Microsoft.Psi.Imaging;
     using System.Windows.Media.Imaging;
-    using TurboJpegWrapper;
+    using SixLabors.ImageSharp.Formats.Jpeg;
+
+
 
     /// <summary>
     /// Implements an image encoder for JPEG format.
     /// </summary>
-    public class ImageToJpegStreamEncoder : IImageToStreamEncoder
+    public class ImageToJpegImageSharpStreamEncoder : IImageToStreamEncoder
     {
-        private TJCompressor compressor;
+        private JpegEncoder encoder = new JpegEncoder();
 
-        public ImageToJpegStreamEncoder()
+        public ImageToJpegImageSharpStreamEncoder()
         {
-            this.compressor = new TJCompressor();
         }
 
         /// <summary>
         /// Gets or sets JPEG image quality (0-100).
         /// </summary>
-        public int QualityLevel { get; set; } = 100;
+        public int QualityLevel { 
+            get { return (int)this.encoder.Quality; } 
+            set { this.encoder.Quality = value; } 
+        }
 
         /// <inheritdoc/>
         public void EncodeToStream(Image image, Stream stream)
         {
-            // compress
-            var result = this.compressor.Compress(image.ImageData, image.Stride, image.Width, image.Height, 
-                image.PixelFormat.ToSystemDrawingImagingPixelFormat(), TJSubsamplingOption.Chrominance444, this.QualityLevel, TJFlags.None);
-            stream.Write(result, 0, result.Length);
+            image.ToImageSharpImage().Save(stream, this.encoder);
         }
     }
 }
