@@ -4,7 +4,6 @@ namespace TBD.Psi.Imaging.Windows
     using Microsoft.Psi;
     using Microsoft.Psi.Imaging;
     using System;
-    using System.Windows.Media.Imaging;
     using ImageSharpImage = SixLabors.ImageSharp.Image;
     public static partial class ImagingOperators
     {

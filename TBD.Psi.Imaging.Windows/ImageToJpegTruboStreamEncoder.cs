@@ -5,9 +5,7 @@
 namespace TBD.Psi.Imaging.Windows
 {
     using System.IO;
-    using System.Drawing.Imaging;
     using Microsoft.Psi.Imaging;
-    using System.Windows.Media.Imaging;
     using TurboJpegWrapper;
 
     /// <summary>
