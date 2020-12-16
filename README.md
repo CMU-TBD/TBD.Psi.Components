@@ -7,7 +7,7 @@ This work is partially funded under a grant from the National Institute on Disab
 
 # Overview
 These are independent components developed by our lab for Psi Developements. They are built against the Psi Nuget packages instead of the main repository and might be uncompatible with the latest version on Github.
-|Name|Platform|Type|Detail|
+|Name|Platform|TargetFramework|Detail|
 |---|---|---|---|
 |[TBD.Psi.Imaging.Windows](TBD.Psi.Imaging.Windows/README.md)|Windows|net472|Helper Imaging Functions (faster JPEG encoding with LibJPEGTrubo)|
 |[TBD.Psi.RosBagStreamReader](TBD.Psi.RosBagStreamReader/README.md)|Windows/Linux|netstandard2.0|A PsiStream Reader for ROS Bags|
