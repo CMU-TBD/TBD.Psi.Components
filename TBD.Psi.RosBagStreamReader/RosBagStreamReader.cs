@@ -9,6 +9,7 @@ namespace TBD.Psi.RosBagStreamReader
     using Microsoft.Psi;
     using Microsoft.Psi.Data;
     using System.IO;
+    using System.Runtime.Serialization;
 
     [StreamReader("ROS Bags", ".bag")]
     public class RosBagStreamReader : IStreamReader
@@ -156,7 +157,7 @@ namespace TBD.Psi.RosBagStreamReader
 
         }
 
-        public IStreamMetadata OpenStream<T>(string name, Action<T, Envelope> target, Func<T> allocator = null)
+        public IStreamMetadata OpenStream<T>(string name, Action<T, Envelope> target, Func<T> allocator = null, Action<SerializationException> errorHandler = null)
         {
             this.validateStreamNameAndType<T>(name);
 

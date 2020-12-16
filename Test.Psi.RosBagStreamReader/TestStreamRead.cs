@@ -21,5 +21,16 @@
             CollectionAssert.AreEqual( streamReader.AvailableStreams.Select(m => m.Name).ToList(), expectedTopicList);
         }
 
+        [TestMethod]
+        public void TestStreamOpen()
+        {
+            // open steam reader
+            var streamReader = new RosBagStreamReader("basic_string.bag", "TestBags");
+            streamReader.OpenStream<string>("/text", (s, e) =>
+            {
+                Assert.IsTrue(s == "hello");
+            });
+        }
+
     }
 }

@@ -11,3 +11,8 @@ These are independent components developed by our lab for Psi Developements. The
 |---|---|---|---|
 |[TBD.Psi.Imaging.Windows](TBD.Psi.Imaging.Windows/README.md)|Windows|net472|Helper Imaging Functions (faster JPEG encoding with LibJPEGTrubo)|
 |[TBD.Psi.RosBagStreamReader](TBD.Psi.RosBagStreamReader/README.md)|Windows/Linux|netstandard2.0|A PsiStream Reader for ROS Bags|
+
+# ChangeLog
+#### 2020/12/15
+- Updated the components to the latest version of Psi `0.14.35.3-beta` & fix compatibility problems.
+- **[RosBagStreamReader]** Added additional tests.

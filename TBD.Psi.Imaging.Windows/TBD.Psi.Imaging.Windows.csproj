@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Psi.Imaging.Windows" Version="0.13.38.2-beta" />
+    <PackageReference Include="Microsoft.Psi.Imaging.Windows" Version="0.14.35.3-beta" />
     <PackageReference Include="Quamotion.TurboJpegWrapper" Version="1.5.84" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
   </ItemGroup>
 
 </Project>
