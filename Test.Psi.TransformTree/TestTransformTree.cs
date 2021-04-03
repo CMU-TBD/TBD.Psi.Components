@@ -24,6 +24,14 @@ namespace Test.Psi.TransformTree
         }
 
         [TestMethod]
+        public void TestInterface()
+        {
+            ITransformationTree<string> tree = new TransformationTree<string>();
+            Assert.IsFalse(tree.Contains("hello"));
+        }
+
+
+        [TestMethod]
         public void TestUpdate()
         {
             var originalCoordinate = new CoordinateSystem(new Point3D(1, 2, 3), UnitVector3D.XAxis, UnitVector3D.YAxis, UnitVector3D.ZAxis);

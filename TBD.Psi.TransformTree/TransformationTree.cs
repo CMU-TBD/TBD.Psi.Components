@@ -7,13 +7,10 @@ namespace TBD.Psi.TransformTree
     using MathNet.Spatial.Euclidean;
     using Microsoft.Psi;
 
-    public class TransformationTree<T>
+    public class TransformationTree<T> : ITransformationTree<T>
     {
 
         protected Dictionary<T, Dictionary<T, CoordinateSystem>> tree = new Dictionary<T, Dictionary<T, CoordinateSystem>>();
-
-        protected TransformationTreeNode<T> rootNode;
-
 
         protected void traverseTree(T parent, CoordinateSystem transform, List<(T id, CoordinateSystem Pose)> frameList)
         {
@@ -33,8 +30,12 @@ namespace TBD.Psi.TransformTree
         {
         }
 
-        public List<(T, CoordinateSystem)> TraverseTree(T root, CoordinateSystem rootPose)
+        public List<(T, CoordinateSystem)> TraverseTree(T root, CoordinateSystem rootPose = null)
         {
+            if (rootPose is null)
+            {
+                rootPose = new CoordinateSystem();
+            }
             var poseList = new List<(T Id, CoordinateSystem Pose)>();
             this.traverseTree(root, rootPose, poseList);
             return poseList;
@@ -47,54 +48,47 @@ namespace TBD.Psi.TransformTree
 
         public bool UpdateTransformation(T parentKey, T childKey, CoordinateSystem transform)
         {
-            // if there is no root make one
-            if (this.rootNode == null)
+            if (this.tree.ContainsKey(parentKey) || this.tree.ContainsKey(childKey))
             {
-                this.rootNode = new TransformationTreeNode<T>(parentKey, true);
-                this.rootNode.AddChild(childKey, transform);
-            }
-            else
-            {
-                // if 
-
-            }
-
-
-
-
-            if (this.tree.ContainsKey(frameA) || this.tree.ContainsKey(frameB))
-            {
-                // if this exist
-                if (this.tree.ContainsKey(frameA) && !this.tree.ContainsKey(frameB))
+                // if only the parentKey exist, add the child key and copy it
+                if (this.tree.ContainsKey(parentKey) && !this.tree.ContainsKey(childKey))
                 {
-                    this.tree[frameA][frameB] = transform.DeepClone();
-                    this.tree[frameB] = new Dictionary<T, CoordinateSystem>();
+                    this.tree[parentKey][childKey] = transform.DeepClone();
+                    this.tree[childKey] = new Dictionary<T, CoordinateSystem>();
                 }
-                else if (!this.tree.ContainsKey(frameA) && this.tree.ContainsKey(frameB))
+                // if only the child key exist, then it is a reverse where we add parent as a child
+                // but we flip the key
+                else if (!this.tree.ContainsKey(parentKey) && this.tree.ContainsKey(childKey))
                 {
-                    this.tree[frameB][frameA] = transform.Invert();
-                    this.tree[frameA] = new Dictionary<T, CoordinateSystem>();
+                    this.tree[childKey][parentKey] = transform.Invert();
+                    this.tree[parentKey] = new Dictionary<T, CoordinateSystem>();
                 }
+                // if both key exist
                 else
                 {
-                    // update the existing graph to prevent loop
-                    if (this.tree[frameA].ContainsKey(frameB))
+                    // first we check if they are already connected
+                    if (this.tree[parentKey].ContainsKey(childKey))
                     {
-                        this.tree[frameA][frameB] = transform.DeepClone();
+                        this.tree[parentKey][childKey] = transform.DeepClone();
                     }
-                    else if (this.tree[frameB].ContainsKey(frameA))
+                    else if (this.tree[childKey].ContainsKey(parentKey))
                     {
-                        this.tree[frameB][frameA] = transform.Invert();
+                        this.tree[childKey][parentKey] = transform.Invert();
+                    }
+                    else
+                    {
+                        // this means they are currently disconnected. try to combine them
+                        // TODO: In the future, we should check if there is any loop or problem.
+                        this.tree[parentKey][childKey] = transform.DeepClone();
                     }
                 }
             }
             else
             {
-                // for all of them.
-                this.tree[frameA] = new Dictionary<T, CoordinateSystem>();
-                this.tree[frameB] = new Dictionary<T, CoordinateSystem>();
-                this.tree[frameA][frameB] = transform.DeepClone();
-
+                // this is first time we see either keys
+                this.tree[parentKey] = new Dictionary<T, CoordinateSystem>();
+                this.tree[childKey] = new Dictionary<T, CoordinateSystem>();
+                this.tree[parentKey][childKey] = transform.DeepClone();
             }
             return true;
         }
@@ -122,36 +116,52 @@ namespace TBD.Psi.TransformTree
             return null;
         }
 
-        public bool Contains(T frame)
+        /// <summary>
+        /// Whether the tree contains the identifier key.
+        /// </summary>
+        /// <param name="key">identifier key.</param>
+        /// <returns></returns>
+        public bool Contains(T key)
         {
-            return this.tree.ContainsKey(frame);
+            return this.tree.ContainsKey(key);
         }
 
-        public bool Contains(IEnumerable<T> frames)
+        /// <summary>
+        /// Whether the tree contains all of the given identifier keys.
+        /// </summary>
+        /// <param name="keys">identifier keys.</param>
+        /// <returns></returns>
+        public bool Contains(IEnumerable<T> keys)
         {
-            return this.tree.Keys.Where(m => frames.Contains(m)).Any();
+            return this.tree.Keys.Where(m => keys.Contains(m)).Any();
         }
 
-        public CoordinateSystem QueryTransformation(T parentFrameKey, T childFrameKey)
+        /// <summary>
+        /// Find the coordinate system transformation from the parent identifier key
+        /// to the child identifier key. null if there is no connection 
+        /// </summary>
+        /// <param name="parentKey">Parent identifier key.</param>
+        /// <param name="childKey">Child identifier key.</param>
+        /// <returns>The transformation or null if there is no connection</returns>
+        public CoordinateSystem QueryTransformation(T parentKey, T childKey)
         {
             // check if both frames are in the tree
-            if (!this.tree.ContainsKey(parentFrameKey) || !this.tree.ContainsKey(childFrameKey))
+            if (!this.tree.ContainsKey(parentKey) || !this.tree.ContainsKey(childKey))
             {
                 return null;
             }
-
             // if they are the same, return identity
-            if (EqualityComparer<T>.Default.Equals(parentFrameKey, childFrameKey))
+            if (EqualityComparer<T>.Default.Equals(parentKey, childKey))
             {
                 return new CoordinateSystem();
             }
 
-            // start from A
-            var transform = this.recursiveSearchNode(parentFrameKey, childFrameKey);
+            // start from the parent and recursively look for the key.
+            var transform = this.recursiveSearchNode(parentKey, childKey);
             if(transform == null)
             {
                 // search the otherway in case they are above it
-                transform = this.recursiveSearchNode(childFrameKey, parentFrameKey);
+                transform = this.recursiveSearchNode(childKey, parentKey);
                 if (transform == null)
                 {
                     return null;
