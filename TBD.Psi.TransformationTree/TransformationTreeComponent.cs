@@ -1,5 +1,5 @@
 ﻿
-namespace TBD.Psi.TransformTree
+namespace TBD.Psi.TransformationTree
 {
     using System;
     using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace TBD.Psi.TransformTree
         }
 
         public TransformationTreeComponent(Pipeline p, uint publishInterval, string pathToJSONFile)
-            : this(p, publishInterval, TransformTreeJSONParser.ParseJSONFile(pathToJSONFile))
+            : this(p, publishInterval, TransformationTreeJSONParser.ParseJSONFile(pathToJSONFile))
         {
         }
 

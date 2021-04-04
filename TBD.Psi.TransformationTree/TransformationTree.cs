@@ -1,5 +1,5 @@
 ﻿
-namespace TBD.Psi.TransformTree
+namespace TBD.Psi.TransformationTree
 {
     using System.Linq;
     using System.Collections.Generic;

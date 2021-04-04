@@ -16,9 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBD.Psi.TransformationTree", "TBD.Psi.TransformTree\TBD.Psi.TransformationTree.csproj", "{BF54726A-5576-4F64-8AD0-32734D4D6E61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBD.Psi.TransformationTree", "TBD.Psi.TransformationTree\TBD.Psi.TransformationTree.csproj", "{BF54726A-5576-4F64-8AD0-32734D4D6E61}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Psi.TransformationTree", "Test.Psi.TransformTree\Test.Psi.TransformationTree.csproj", "{DF2EA195-8925-4967-A689-2A1A6176BC1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Psi.TransformationTree", "Test.Psi.TransformationTree\Test.Psi.TransformationTree.csproj", "{DF2EA195-8925-4967-A689-2A1A6176BC1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

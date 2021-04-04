@@ -1,5 +1,5 @@
 ﻿
-namespace TBD.Psi.TransformTree
+namespace TBD.Psi.TransformationTree
 {
     using System;
     using System.IO;
@@ -29,7 +29,7 @@ namespace TBD.Psi.TransformTree
         public TreeInnerJSONObject[] Transformations { get; set; }
     }
 
-    public class TransformTreeJSONParser
+    public class TransformationTreeJSONParser
     {
         private const string PARSERVERSION = "0.0.1";
 

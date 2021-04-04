@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TBD.Psi.TransformTree\TBD.Psi.TransformationTree.csproj" />
+    <ProjectReference Include="..\TBD.Psi.TransformationTree\TBD.Psi.TransformationTree.csproj" />
   </ItemGroup>
 
 </Project>

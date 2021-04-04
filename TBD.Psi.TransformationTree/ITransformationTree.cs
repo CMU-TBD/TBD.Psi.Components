@@ -1,6 +1,6 @@
 ﻿
 
-namespace TBD.Psi.TransformTree
+namespace TBD.Psi.TransformationTree
 {
     using MathNet.Spatial.Euclidean;
     using System;

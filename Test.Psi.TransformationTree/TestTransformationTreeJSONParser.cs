@@ -1,12 +1,12 @@
 
-namespace Test.Psi.TransformTree
+namespace Test.Psi.TransformationTree
 {
     using MathNet.Spatial.Euclidean;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using TBD.Psi.TransformTree;
+    using TBD.Psi.TransformationTree;
 
     [TestClass]
-    public class TestTransformTreeJSONParser
+    public class TestTransformationTreeJSONParser
     {
         private string testText = @"{'version':'0.0.1',  
                 'transformations':[{
@@ -32,13 +32,13 @@ namespace Test.Psi.TransformTree
         [TestMethod]
         public void TestVersion()
         {
-            var tree = TransformTreeJSONParser.ParseJSON(testText);
+            var tree = TransformationTreeJSONParser.ParseJSON(testText);
         }
 
         [TestMethod]
         public void TestReadValue()
         {
-            var tree = TransformTreeJSONParser.ParseJSON(testText);
+            var tree = TransformationTreeJSONParser.ParseJSON(testText);
             tree.Contains("topCam");
             tree.Contains("mainCam");
             tree.Contains("world");

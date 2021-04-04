@@ -1,12 +1,12 @@
 
-namespace Test.Psi.TransformTree
+namespace Test.Psi.TransformationTree
 {
     using MathNet.Spatial.Euclidean;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using TBD.Psi.TransformTree;
+    using TBD.Psi.TransformationTree;
 
     [TestClass]
-    public class TestTransformTree
+    public class TestTransformationTree
     {
 
         [TestMethod]
