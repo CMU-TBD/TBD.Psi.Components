@@ -162,6 +162,11 @@ namespace TBD.Psi.RosBagStreamReader
             this.loadDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
             this.loadDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
             this.loadDeserializer(new GeometrymsgsPoseStampedDeserializer(true));
+            this.loadDeserializer(new GeometrymsgsPoseDeserializer());
+            this.loadDeserializer(new GeometrymsgsQuaternionDeserializer());
+            this.loadDeserializer(new GeometrymsgsTransformDeserializer());
+            this.loadDeserializer(new GeometrymsgsVector3Deserializer());
+            this.loadDeserializer(new TFMessageDeserializer());
         }
 
         public IEnumerable<RosStreamMetaData> GetStreamMetaData() {
@@ -217,6 +222,16 @@ namespace TBD.Psi.RosBagStreamReader
             {
                 topicInfo.ChunkIndex = 0;
                 topicInfo.bagIndex++;
+            }
+
+            // if we somehow run out of bags, then it is done too. It
+            if (topicInfo.bagIndex >= this.bagFileStreams.Count)
+            {
+                bagIndex = default;
+                pointer = default;
+                length = default;
+                envelope = default;
+                return false;
             }
 
             // read the chunk

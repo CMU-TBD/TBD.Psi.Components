@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MathNet.Spatial" Version="0.6.0" />
+    <PackageReference Include="MathNet.Spatial.Signed" Version="0.6.0" />
     <PackageReference Include="Microsoft.Psi.Runtime" Version="0.14.35.3-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
