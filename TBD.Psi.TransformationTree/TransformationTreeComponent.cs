@@ -39,6 +39,11 @@ namespace TBD.Psi.TransformationTree
             return this.tree.UpdateTransformation(parentKey, childKey, transform);
         }
 
+        public CoordinateSystem QueryTransformation(string parentKey, string childKey)
+        {
+            return this.tree.QueryTransformation(parentKey, childKey);
+        }
+
         public void AddTransformationUpdateLink(IProducer<(string parentKey, string childKey, CoordinateSystem transform)> producer)
         {
             this.linkTotal++;
