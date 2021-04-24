@@ -1,5 +1,6 @@
 ﻿namespace Test.Psi.RosBagStreamReader
 {
+    using Microsoft.Psi;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
@@ -8,29 +9,37 @@
     using TBD.Psi.RosBagStreamReader;
 
     [TestClass]
-    public class TestStreamRead
+    public class TestStore
     {
         [TestMethod]
-        public void TestSimpleRosBag()
+        public void TestSimpleRosBagMetaData()
         {
-            // open steam reader
-            var streamReader = new RosBagStreamReader("basic_string.bag", "TestBags");
-            // check if it knows there are two streams & names are correct
-            Assert.AreEqual(streamReader.AvailableStreams.Count(), 1);
-            string[] expectedTopicList = { "/text" };
-            CollectionAssert.AreEqual( streamReader.AvailableStreams.Select(m => m.Name).ToList(), expectedTopicList);
+            using (var p = Pipeline.Create())
+            {
+                // open importer
+                var store = RosBagStore.Open(p, "basic_string.bag", "TestBags");
+                // validate store informations
+                Assert.AreEqual(store.AvailableStreams.Count(), 1);
+                Assert.AreEqual(store.AvailableStreams.First().Name, "/text");
+            }
         }
 
         [TestMethod]
-        public void TestStreamOpen()
+        public void TestSimpleRosBagRead()
         {
-            // open steam reader
-            var streamReader = new RosBagStreamReader("basic_string.bag", "TestBags");
-            streamReader.OpenStream<string>("/text", (s, e) =>
+            using (var p = Pipeline.Create())
             {
-                Assert.IsTrue(s == "hello");
-            });
+                // open importer
+                var store = RosBagStore.Open(p, "basic_string.bag", "TestBags");
+                // read the data
+                var stream = store.OpenStream<string>("/text");
+                var i = 3;
+                stream.Do(m =>
+                {
+                    Assert.AreEqual(m, $"Hello {i++}");
+                });
+                p.Run(ReplayDescriptor.ReplayAll);
+            }
         }
-
     }
 }

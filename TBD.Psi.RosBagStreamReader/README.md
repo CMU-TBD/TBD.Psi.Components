@@ -82,3 +82,6 @@ private void loadDeserializers()
 
 ## Known Limitations
 1. Currently, the deserializers does not handle encrypted ROS Bags.
+
+## TODOs
+1. The reader expose the actual message times when queries in metadata. Currently, it just returns the overall bag duration.

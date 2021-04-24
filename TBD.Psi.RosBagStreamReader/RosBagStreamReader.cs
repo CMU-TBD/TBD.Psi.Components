@@ -40,25 +40,39 @@ namespace TBD.Psi.RosBagStreamReader
             this.bagInterface = reader;
         }
 
-        public string Name {
+        public string Name
+        {
             get => this.bagInterface.FirstBagName;
         }
 
-        public string Path {
+        public string Path
+        {
             get => this.bagInterface.BagDirectory;
         }
 
-        public IEnumerable<IStreamMetadata> AvailableStreams {
+        public IEnumerable<IStreamMetadata> AvailableStreams
+        {
             get => this.bagInterface.GetStreamMetaData();
         }
 
-        public TimeInterval MessageCreationTimeInterval {
+        public TimeInterval MessageCreationTimeInterval
+        {
             get => new TimeInterval(this.bagInterface.BagStartTime, this.bagInterface.BagEndTime);
         }
 
-        public TimeInterval MessageOriginatingTimeInterval {
+        public TimeInterval MessageOriginatingTimeInterval
+        {
             get => new TimeInterval(this.bagInterface.BagStartTime, this.bagInterface.BagEndTime);
         }
+
+        public TimeInterval StreamTimeInterval
+        {
+            get => new TimeInterval(this.bagInterface.BagStartTime, this.bagInterface.BagEndTime);
+        }
+
+        public long? Size { get => null; }
+
+        public int? StreamCount => this.bagInterface.ReadableTopicNum;
 
         public bool ContainsStream(string name)
         {
@@ -120,7 +134,7 @@ namespace TBD.Psi.RosBagStreamReader
             return new RosBagStreamReader(this.bagInterface);
         }
 
-        private void validateStreamNameAndType<T>(string name)
+        private void ValidateStreamNameAndType<T>(string name)
         {
             // make sure the name exist
             if (!this.bagInterface.GetStreamMetaData().Where(m => m.Name == name).Any())
@@ -157,14 +171,14 @@ namespace TBD.Psi.RosBagStreamReader
 
         }
 
-        public IStreamMetadata OpenStream<T>(string name, Action<T, Envelope> target, Func<T> allocator = null, Action<SerializationException> errorHandler = null)
+        public IStreamMetadata OpenStream<T>(string name, Action<T, Envelope> target, Func<T> allocator = null, Action<T> deallocator = null, Action<SerializationException> errorHandler = null)
         {
-            this.validateStreamNameAndType<T>(name);
+            this.ValidateStreamNameAndType<T>(name);
 
             var deserializer = this.bagInterface.GetDeserializer(name);
             this.subscribedTopics[name] = DateTime.MinValue;
             // TODO make this a list since there could be multiple subscribers.
-            if (! this.outputs.ContainsKey(name))
+            if (!this.outputs.ContainsKey(name))
             {
                 this.outputs[name] = new List<Action<byte[], Envelope>>();
             }
@@ -174,8 +188,8 @@ namespace TBD.Psi.RosBagStreamReader
                 // call action
                 target(output, env);
             });
-            
-                
+
+
             return this.bagInterface.GetStreamMetaData().Where(m => m.Name == name).First();
         }
 
@@ -185,9 +199,9 @@ namespace TBD.Psi.RosBagStreamReader
             return deserializer.Deserialize<T>(dataArr, ref env);
         }
 
-        public IStreamMetadata OpenStreamIndex<T>(string name, Action<Func<IStreamReader, T>, Envelope> target)
+        public IStreamMetadata OpenStreamIndex<T>(string name, Action<Func<IStreamReader, T>, Envelope> target, Func<T> allocator = null)
         {
-            this.validateStreamNameAndType<T>(name);
+            this.ValidateStreamNameAndType<T>(name);
 
             if (!this.outputTargets.ContainsKey(name))
             {
@@ -242,7 +256,7 @@ namespace TBD.Psi.RosBagStreamReader
         public void Seek(TimeInterval interval, bool useOriginatingTime = false)
         {
             // restart all information
-            foreach(var topic in this.subscribedTopics.Keys.ToList())
+            foreach (var topic in this.subscribedTopics.Keys.ToList())
             {
                 // get stream meta data
                 var streamMeta = this.bagInterface.GetStreamMetaData().Where(m => m.Name == topic).First();

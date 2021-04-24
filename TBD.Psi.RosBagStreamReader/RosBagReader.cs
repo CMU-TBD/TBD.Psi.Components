@@ -185,6 +185,11 @@ namespace TBD.Psi.RosBagStreamReader
             get => this.bagEndTime;
         }
 
+        public int? ReadableTopicNum
+        {
+            get => this.streamMetaList.Count;
+        }
+
         public MsgDeserializer GetDeserializer(string topicName)
         {
             return this.metaInformation[topicName].deserializer;
