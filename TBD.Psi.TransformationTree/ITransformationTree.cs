@@ -49,5 +49,14 @@ namespace TBD.Psi.TransformationTree
         /// <param name="childKey">Child identifier key.</param>
         /// <returns>The transformation or null if there is no connection</returns>
         CoordinateSystem QueryTransformation(T parentKey, T childKey);
+
+        /// <summary>
+        /// Find a potential root (a key that has no parents) for the involved transformation.
+        /// </summary>
+        /// <returns>Key of the root if found</returns>
+        /// <remarks>The code does not check if all transformations are connected. If disconnected,
+        /// there is no gurantee on which graph's root it will return.</remarks>
+        T FindRoot();
+
     }
 }

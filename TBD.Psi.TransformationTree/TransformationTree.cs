@@ -116,33 +116,19 @@ namespace TBD.Psi.TransformationTree
             return null;
         }
 
-        /// <summary>
-        /// Whether the tree contains the identifier key.
-        /// </summary>
-        /// <param name="key">identifier key.</param>
-        /// <returns></returns>
+        ///<inheritdoc/>      
         public bool Contains(T key)
         {
             return this.tree.ContainsKey(key);
         }
 
-        /// <summary>
-        /// Whether the tree contains all of the given identifier keys.
-        /// </summary>
-        /// <param name="keys">identifier keys.</param>
-        /// <returns></returns>
+        ///<inheritdoc/>      
         public bool Contains(IEnumerable<T> keys)
         {
             return this.tree.Keys.Where(m => keys.Contains(m)).Any();
         }
 
-        /// <summary>
-        /// Find the coordinate system transformation from the parent identifier key
-        /// to the child identifier key. null if there is no connection 
-        /// </summary>
-        /// <param name="parentKey">Parent identifier key.</param>
-        /// <param name="childKey">Child identifier key.</param>
-        /// <returns>The transformation or null if there is no connection</returns>
+        ///<inheritdoc/>    
         public CoordinateSystem QueryTransformation(T parentKey, T childKey)
         {
             // check if both frames are in the tree
@@ -169,6 +155,24 @@ namespace TBD.Psi.TransformationTree
                 return transform.Invert();
             }
             return transform;
+        }
+
+        ///<inheritdoc/>        
+        public T FindRoot()
+        {
+            T root = this.tree.Keys.FirstOrDefault();
+            // search the tree upwards
+            bool rootFound = false;
+            while (!rootFound)
+            {
+                rootFound = true;
+                if (this.tree.Values.Where(v => v.Keys.Contains(root)).Any())
+                {
+                    root = this.tree.Values.Where(v => v.Keys.Contains(root)).First().Keys.First();
+                    rootFound = false;
+                }
+            }
+            return root;
         }
     }
 }
