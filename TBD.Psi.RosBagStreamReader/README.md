@@ -25,8 +25,14 @@ You can also add the `dll` to PsiStudio to enable direct reading of ROSBAGs in P
 |std_msgs/Bool| `bool` ||
 |sensor_msgs/Image| `Shared<Image>` |Only some formats are supported|
 |sensor_msgs/CompressedImage| `Shared<Image>` |Only some formats are supported|
-|geometry_msgs/PoseStamped| `Coordinate Systems` ||
+|geometry_msgs/PoseStamped| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
+|geometry_msgs/Pose| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
+|geometry_msgs/Transform| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
+|geometry_msgs/TransformStamped| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
+|geometry_msgs/Quaternion| `MathNet.Spatial.Euclidean.Quaternion` ||
+|geometry_msgs/Vector3| `MathNet.Spatial.Euclidean.Vector3D` ||
 |audio_common_msgs/AudioData| `AudioBuffer` ||
+|tf2/TFmessage| `tbd.psi.TransformationTree` ||
 
 Contributions for more Deserializers are welcomed!
 
