@@ -71,7 +71,28 @@ var strlen = (int)BitConverter.ToUInt32(data, offset);
 // get the string
 var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
  ```
-You can find Helper methods to decode in `Helper.cs`.
+You can find Helper methods to decode in `Helper.cs`. Some message deserializers also comes with a strongly-typed `Deserialize` function that allows you to use it to deserialize parts of a message. Here's an example from `geometry_msgs/Transform`
+```
+public static CoordinateSystem Deserialize(byte[] data, ref int offset)
+{
+    // get the translation vector
+    var translation = GeometrymsgsVector3Deserializer.Deserialize(data, ref offset);
+    // get the rotation quaterion
+    var quaternion = GeometrymsgsQuaternionDeserializer.Deserialize(data, ref offset);
+    // combine both into a coordinate system
+    return ConvertToCoordinateSystem(quaternion, translation);
+}
+
+public override T Deserialize<T>(byte[] data, ref Envelope env)
+{
+    // convert to coordinate systems
+    int offset = 0;
+    var cs = Deserialize(data, ref offset);
+
+    return (T)(object)cs;
+}
+```
+
 
 3. Add the deserializer to the `loadDeserializers` method in `RosBagReader.cs`. We are looking into automating this in the future.
 ```csharp
