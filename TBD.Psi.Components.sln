@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBD.Psi.TransformationTree"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Psi.TransformationTree", "Test.Psi.TransformationTree\Test.Psi.TransformationTree.csproj", "{0BC3893C-7FDD-4C8F-8324-D540C783C399}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBD.Psi.RosSharpBridge.Windows", "TBD.Psi.RosSharpBridge.Windows\TBD.Psi.RosSharpBridge.Windows.csproj", "{5FBAAF40-D0FD-4FB7-AE14-ED99E6E75D3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{0BC3893C-7FDD-4C8F-8324-D540C783C399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BC3893C-7FDD-4C8F-8324-D540C783C399}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BC3893C-7FDD-4C8F-8324-D540C783C399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FBAAF40-D0FD-4FB7-AE14-ED99E6E75D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FBAAF40-D0FD-4FB7-AE14-ED99E6E75D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FBAAF40-D0FD-4FB7-AE14-ED99E6E75D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FBAAF40-D0FD-4FB7-AE14-ED99E6E75D3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

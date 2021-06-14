@@ -130,6 +130,33 @@ namespace TBD.Psi.RosBagStreamReader
             return val;
         }
 
+        internal static T[] ReadArray<T>(byte[] data, string type, out int nextOffset, int offset = 0)
+        {
+            // get the number 
+            var length = BitConverter.ToUInt32(data, offset);
+            offset += 4;
+            var arr = new T[length];
+            for(var i = 0; i < length; i++)
+            {
+                // read the object
+                switch (type)
+                {
+                    case "string":
+                        arr[i] = (T) (Object) ReadMsgString(data, out offset, offset);
+                        break;
+                    case "float64":
+                        arr[i] = (T) (Object) ReadMsgFloat64(data, out offset, offset);
+                        break;
+                    default:
+                        throw new InvalidCastException($"Cannot find type of {type}");
+                }
+            }
+            nextOffset = offset;
+            return arr;
+        }
+
+
+
         internal static DateTime ReadMsgTime(byte[] data, out int nextOffset, int offset = 0)
         {
             var seconds = BitConverter.ToUInt32(data, offset);

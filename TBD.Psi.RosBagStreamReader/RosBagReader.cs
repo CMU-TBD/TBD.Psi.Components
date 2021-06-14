@@ -157,11 +157,12 @@ namespace TBD.Psi.RosBagStreamReader
             this.loadDeserializer(new StdMsgsBoolDeserializer());
             this.loadDeserializer(new SensorMsgsImageDeserializer(true));
             this.loadDeserializer(new SensorMsgsCompressedImageDeserializer(true));      
+            this.loadDeserializer(new SensorMsgsJointStateDeserializer(true));      
             this.loadDeserializer(new AudioCommonMsgsAudioDataDeserializer());
             this.loadDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
             this.loadDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
             this.loadDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
-            this.loadDeserializer(new GeometrymsgsPoseStampedDeserializer(true));
+            this.loadDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
             this.loadDeserializer(new GeometrymsgsPoseDeserializer());
             this.loadDeserializer(new GeometrymsgsQuaternionDeserializer());
             this.loadDeserializer(new GeometrymsgsTransformDeserializer());
