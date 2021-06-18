@@ -11,7 +11,7 @@ These are independent components developed by our lab for Psi Developements. The
 |---|---|---|---|
 |[TBD.Psi.Imaging.Windows](TBD.Psi.Imaging.Windows/README.md)|Windows|net472|Helper Imaging Functions (faster JPEG encoding with LibJPEGTrubo)|
 |[TBD.Psi.RosBagStreamReader](TBD.Psi.RosBagStreamReader/README.md)|Windows/Linux|netstandard2.0|A PsiStream Reader for ROS Bags|
-|[TBD.Psi.TransformationTree](TBD.Psi.TransformationTree/README.md)|Windows/Linux|netstandard2.0| A hybrid component to register connected transformations in a scene. useful for scenarios with multiple frame of references.|
+
 # ChangeLog
 #### 2021-04-24
 - Updated components to the latest version of Psi `0.15.49.1-beta` & fix compatibility problems.
