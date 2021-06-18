@@ -14,8 +14,7 @@ namespace TBD.Psi.RosBagStreamReader.Deserailizers
         public override T Deserialize<T>(byte[] data, ref Envelope env)
         {
             // convert it
-            var output = Encoding.UTF8.GetString(data, 4, data.Length - 4);
-            return (T) (object) output;
+            return (T)(object)Helper.ReadRosBaseType<string>(data, out _, 0);
         }
     }
 }

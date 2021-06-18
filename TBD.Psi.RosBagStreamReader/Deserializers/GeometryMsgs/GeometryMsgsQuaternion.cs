@@ -18,10 +18,10 @@
 
         public static Quaternion Deserialize(byte[] data, ref int offset)
         {
-            var quaternion_x = Helper.ReadMsgFloat64(data, out offset, offset);
-            var quaternion_y = Helper.ReadMsgFloat64(data, out offset, offset);
-            var quaternion_z = Helper.ReadMsgFloat64(data, out offset, offset);
-            var quaternion_w = Helper.ReadMsgFloat64(data, out offset, offset);
+            var quaternion_x = Helper.ReadRosBaseType<double>(data, out offset, offset);
+            var quaternion_y = Helper.ReadRosBaseType<double>(data, out offset, offset);
+            var quaternion_z = Helper.ReadRosBaseType<double>(data, out offset, offset);
+            var quaternion_w = Helper.ReadRosBaseType<double>(data, out offset, offset);
             return new Quaternion(quaternion_w, quaternion_x, quaternion_y, quaternion_z);
         }
 
