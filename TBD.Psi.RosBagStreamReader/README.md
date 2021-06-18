@@ -25,6 +25,7 @@ You can also add the `dll` to PsiStudio to enable direct reading of ROSBAGs in P
 |std_msgs/Bool| `bool` ||
 |sensor_msgs/Image| `Shared<Image>` |Only some formats are supported|
 |sensor_msgs/CompressedImage| `Shared<Image>` |Only some formats are supported|
+|sensor_msgs/JointState| `(string[] name, double[] position, double[] velocity, double[] effort)` ||
 |geometry_msgs/PoseStamped| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
 |geometry_msgs/Pose| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
 |geometry_msgs/Transform| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
