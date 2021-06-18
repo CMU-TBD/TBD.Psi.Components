@@ -7,10 +7,7 @@
   <ItemGroup>
     <PackageReference Include="MathNet.Spatial.Signed" Version="0.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\psi\Sources\Runtime\Microsoft.Psi\Microsoft.Psi.csproj" />
+    <PackageReference Include="Microsoft.Psi.Runtime" Version="0.15.49.1-beta" />
   </ItemGroup>
 
 </Project>
