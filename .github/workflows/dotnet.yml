@@ -12,28 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: "mkdir -p source"
     - uses: actions/checkout@v2
-      with:
-        repository: microsoft/psi
-        path: source/psi
-    - uses: actions/checkout@v2
-      with:
-        path: source/psi.component
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: |
-        cd source/psi.component
         dotnet restore tbd.psi.rosbagstreamreader
     - name: Build
       run: |
-        cd source/psi.component
         dotnet build tbd.psi.rosbagstreamreader --no-restore
     - name: Test
       run: |
-        cd source/psi.component
         dotnet test test.psi.rosbagstreamreader --no-build --verbosity normal
         dotnet test test.psi.transformationtree --no-build --verbosity normal
