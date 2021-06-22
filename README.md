@@ -11,14 +11,4 @@ These are independent components developed by our lab for Psi Developements. The
 |---|---|---|---|
 |[TBD.Psi.Imaging.Windows](TBD.Psi.Imaging.Windows/README.md)|Windows|net472|Helper Imaging Functions (faster JPEG encoding with LibJPEGTrubo)|
 |[TBD.Psi.RosBagStreamReader](TBD.Psi.RosBagStreamReader/README.md)|Windows/Linux|netstandard2.0|A PsiStream Reader for ROS Bags|
-
-# ChangeLog
-#### 2021-04-24
-- Updated components to the latest version of Psi `0.15.49.1-beta` & fix compatibility problems.
-- **[RosBagStreamReader]** Added additional tests to test reading streams from store using the same pattern as PsiStore.
-#### 2021-04-04
-- Added TransformationTree that keep tracks of relational transformations between coordinate frames.
-- Added multiple deserializers for geometry_msgs and also converts tf to TransformationTree
-#### 2020-12-15
-- Updated the components to the latest version of Psi `0.14.35.3-beta` & fix compatibility problems.
-- **[RosBagStreamReader]** Added additional tests.
+|[TBD.Psi.TransformationTree](TBD.Psi.TransformationTree/README.md)|Windows/Linux|netstandard2.0|A spatial transformation frame representation.|
