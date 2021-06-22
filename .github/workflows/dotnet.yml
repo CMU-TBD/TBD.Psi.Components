@@ -27,12 +27,13 @@ jobs:
     - name: Restore dependencies
       run: |
         cd source/psi.component
-        dotnet restore
+        dotnet restore tbd.psi.rosbagstreamreader
     - name: Build
       run: |
         cd source/psi.component
-        dotnet build --no-restore
+        dotnet build tbd.psi.rosbagstreamreader --no-restore
     - name: Test
       run: |
         cd source/psi.component
-        dotnet test --no-build --verbosity normal
+        dotnet test test.psi.rosbagstreamreader --no-build --verbosity normal
+        dotnet test test.psi.transformationtree --no-build --verbosity normal
