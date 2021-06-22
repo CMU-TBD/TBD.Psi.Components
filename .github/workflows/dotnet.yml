@@ -19,11 +19,14 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: |
+        cd TBD.Psi.Components 
         dotnet restore tbd.psi.rosbagstreamreader
     - name: Build
       run: |
+        cd TBD.Psi.Components 
         dotnet build tbd.psi.rosbagstreamreader --no-restore
     - name: Test
       run: |
+        cd TBD.Psi.Components 
         dotnet test test.psi.rosbagstreamreader --no-build --verbosity normal
         dotnet test test.psi.transformationtree --no-build --verbosity normal
