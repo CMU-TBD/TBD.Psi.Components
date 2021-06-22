@@ -18,13 +18,13 @@
             this.UpdateEnvelope(ref envelop, originTime);
 
             // get a string
-            var text = Helper.ReadMsgString(data, out offset, offset);
+            var text = Helper.ReadRosBaseType<string>(data, out offset, offset);
 
             // the next offset is the confidence
-            var confidence = Helper.ReadMsgFloat32(data, out offset, offset);
+            var confidence = Helper.ReadRosBaseType<float>(data, out offset, offset);
 
             // the next is the end time
-            var end_time = Helper.ReadMsgTime(data, out offset, offset);
+            var end_time = Helper.ReadRosBaseType<DateTime>(data, out offset, offset);
 
             return (T)(object)new Tuple<string, TimeSpan>(text, end_time - originTime);
 

@@ -1,5 +1,5 @@
 # TBD.Psi.RosBagStreamReader
-COPYRIGHT(C) 2020 - Transportation, Bots, and Disability Lab - CMU
+COPYRIGHT(C) 2021 - Transportation, Bots, and Disability Lab - CMU
 Code released under MIT.
 
 ## Funding
@@ -104,6 +104,11 @@ private void loadDeserializers()
 
 ## Known Limitations
 1. Currently, the deserializers does not handle encrypted ROS Bags.
+2. `tf` and `tf_static` will be parsed differently.
 
-## TODOs
-1. The reader expose the actual message times when queries in metadata. Currently, it just returns the overall bag duration.
+## Changelog
+#### 2021-06-21
+- Fixed the message count was being set as average message size.
+- Cleaned up the parsing of bytes and created templated helper methods for all ros base types.
+- display /tf message using TransformationTree.
+- published in nuget.

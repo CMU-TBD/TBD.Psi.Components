@@ -18,7 +18,7 @@ namespace TBD.Psi.RosBagStreamReader.Deserializers
             switch (encoding.ToUpper())
             {
                 case ("BGR8"): return PixelFormat.BGR_24bpp;
-                case ("RGB8"): return PixelFormat.BGR_24bpp;
+                case ("RGB8"): return PixelFormat.RGB_24bpp;
                 case ("BGRA8"): return PixelFormat.BGRA_32bpp;
                 case ("MONO8"): return PixelFormat.Gray_8bpp;
                 case ("MONO16"): return PixelFormat.Gray_16bpp;

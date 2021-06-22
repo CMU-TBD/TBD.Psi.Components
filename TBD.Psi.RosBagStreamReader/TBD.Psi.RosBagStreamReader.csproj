@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1.0-beta</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Company>Carnegie Mellon University</Company>
+    <Authors>Transportation, Bots, and Disability Lab</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/CMU-TBD/TBD.Psi.Components</RepositoryUrl>
+    <Copyright>Transportation, Bots, and Disability Lab - Carnegie Mellon University</Copyright>
+    <Description>Implementation of Psi's 3rd party reader for Ros 1 Bags.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TBD.Psi.TransformationTree\TBD.Psi.TransformationTree.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

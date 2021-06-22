@@ -21,7 +21,7 @@
             // read the header and get location
             (_, var originTime, var parentFrame) = Helper.ReadStdMsgsHeader(data, out offset, offset);
             // get the child
-            var childFrame = Helper.ReadMsgString(data, out offset, offset);
+            var childFrame = Helper.ReadRosBaseType<string>(data, out offset, offset);
             // get the transform
             var transform = GeometrymsgsTransformDeserializer.Deserialize(data, ref offset);
 

@@ -18,9 +18,9 @@
 
         public static Vector3D Deserialize(byte[] data, ref int offset)
         {
-            var position_x = Helper.ReadMsgFloat64(data, out offset, offset);
-            var position_y = Helper.ReadMsgFloat64(data, out offset, offset);
-            var position_z = Helper.ReadMsgFloat64(data, out offset, offset);
+            var position_x = Helper.ReadRosBaseType<double>(data, out offset, offset);
+            var position_y = Helper.ReadRosBaseType<double>(data, out offset, offset);
+            var position_z = Helper.ReadRosBaseType<double>(data, out offset, offset);
             return new Vector3D(position_x, position_y, position_z);
         }
 

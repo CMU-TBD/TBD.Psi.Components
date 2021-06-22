@@ -87,94 +87,99 @@ namespace TBD.Psi.RosBagStreamReader
             return fieldProperties;
         }
 
-        internal static int PostHeaderPosition(byte[] data, int offset = 0)
+        internal static T ReadRosBaseType<T>(byte[] data, out int nextOffset, int offset = 0)
         {
-            // first 4 bytes is Uint32 sequence
-            // next 8 bytes is time.
-            // then it's the frame_id string
-            return (int)BitConverter.ToUInt32(data, 12 + offset) + 16 + offset;
+            switch (Type.GetTypeCode(typeof(T)))
+            {
+                case TypeCode.Boolean:
+                    var boolVal = BitConverter.ToBoolean(data, offset);
+                    nextOffset = offset + 1;
+                    return (T)(object)boolVal;
+                case TypeCode.Byte:
+                    nextOffset = offset + 1;
+                    return (T)(object)data[offset];
+                case TypeCode.SByte:
+                    nextOffset = offset + 1;
+                    return (T)(object)(sbyte)data[offset];
+                case TypeCode.Int16:
+                    var int16Val = BitConverter.ToInt16(data, offset);
+                    nextOffset = offset + 2;
+                    return (T)(object)int16Val;
+                case TypeCode.UInt16:
+                    var uInt16Val = BitConverter.ToUInt16(data, offset);
+                    nextOffset = offset + 2;
+                    return (T)(object)uInt16Val;
+                case TypeCode.Int32:
+                    var int32Val = BitConverter.ToInt32(data, offset);
+                    nextOffset = offset + 4;
+                    return (T)(object)int32Val;
+                case TypeCode.UInt32:
+                    var uInt32Val = BitConverter.ToUInt32(data, offset);
+                    nextOffset = offset + 4;
+                    return (T)(object)uInt32Val;
+                case TypeCode.Int64:
+                    var int64Val = BitConverter.ToInt64(data, offset);
+                    nextOffset = offset + 8;
+                    return (T)(object)int64Val;
+                case TypeCode.UInt64:
+                    var uInt64Val = BitConverter.ToUInt64(data, offset);
+                    nextOffset = offset + 8;
+                    return (T)(object)uInt64Val;
+                case TypeCode.Single:
+                    var floatVal = BitConverter.ToSingle(data, offset);
+                    nextOffset = offset + 4;
+                    return (T)(object)floatVal;
+                case TypeCode.Double:
+                    var doubleVal = BitConverter.ToDouble(data, offset);
+                    nextOffset = offset + 8;
+                    return (T)(object)doubleVal;
+                case TypeCode.String:
+                    // get length
+                    var strlen = (int)BitConverter.ToUInt32(data, offset);
+                    // get the string
+                    var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
+                    nextOffset = offset + 4 + strlen;
+                    return (T)(object)str;
+                case TypeCode.DateTime:
+                    var seconds = BitConverter.ToUInt32(data, offset);
+                    var nanoSeconds = BitConverter.ToUInt32(data, offset + 4);
+                    nextOffset = offset + 8;
+                    return (T)(object)(DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime + TimeSpan.FromTicks(nanoSeconds / 100));
+                case TypeCode.Object:
+                    if (typeof(T) == typeof(TimeSpan))
+                    {
+                        var durationSeconds = BitConverter.ToInt32(data, offset);
+                        var durationNanoSeconds = BitConverter.ToInt32(data, offset + 4);
+                        nextOffset = offset + 8;
+                        return (T)(Object)(TimeSpan.FromSeconds(durationSeconds) + TimeSpan.FromTicks(durationNanoSeconds / 100));
+                    }
+                    throw new InvalidCastException($"Unable to convert to {typeof(T)}");
+                default:
+                    throw new InvalidCastException($"Unable to convert to {typeof(T)}");
+            }
         }
 
-
-        internal static string ReadMsgString(byte[] data, int offset = 0)
+        internal static T[] ReadRosBaseTypeArray<T>(byte[] data, string type, out int nextOffset, int offset = 0)
         {
-            // get length
-            var strlen = (int)BitConverter.ToUInt32(data, offset);
-            // get the string
-            var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
-            return str;
-        }
-
-
-        internal static string ReadMsgString(byte[] data, out int nextOffset, int offset = 0)
-        {
-            // get length
-            var strlen = (int)BitConverter.ToUInt32(data, offset);
-            // get the string
-            var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
-            nextOffset = offset + 4 + strlen;
-            return str;
-        }
-
-        internal static float ReadMsgFloat32(byte[] data, out int nextOffset, int offset = 0)
-        {
-            var val = BitConverter.ToSingle(data, offset);
-            nextOffset = offset + 4;
-            return val;
-        }
-
-        internal static double ReadMsgFloat64(byte[] data, out int nextOffset, int offset = 0)
-        {
-            var val = BitConverter.ToDouble(data, offset);
-            nextOffset = offset + 8;
-            return val;
-        }
-
-        internal static T[] ReadArray<T>(byte[] data, string type, out int nextOffset, int offset = 0)
-        {
-            // get the number 
+            // get the length of array 
             var length = BitConverter.ToUInt32(data, offset);
-            offset += 4;
+            nextOffset = offset + 4;
             var arr = new T[length];
+            // parse each item.
             for(var i = 0; i < length; i++)
             {
-                // read the object
-                switch (type)
-                {
-                    case "string":
-                        arr[i] = (T) (Object) ReadMsgString(data, out offset, offset);
-                        break;
-                    case "float64":
-                        arr[i] = (T) (Object) ReadMsgFloat64(data, out offset, offset);
-                        break;
-                    default:
-                        throw new InvalidCastException($"Cannot find type of {type}");
-                }
+                arr[i] = ReadRosBaseType<T>(data, out nextOffset, nextOffset);
             }
-            nextOffset = offset;
             return arr;
-        }
-
-
-
-        internal static DateTime ReadMsgTime(byte[] data, out int nextOffset, int offset = 0)
-        {
-            var seconds = BitConverter.ToUInt32(data, offset);
-            var nanoSeconds = BitConverter.ToUInt32(data, offset + 4);
-            nextOffset = offset + 8;
-            return DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime + TimeSpan.FromTicks(nanoSeconds / 100);
         }
 
         internal static (uint, DateTime, string) ReadStdMsgsHeader(byte[] data, out int nextOffset, int offset = 0)
         {
-            var seq = BitConverter.ToUInt32(data, offset);
-            offset += 4;
-            var originTime = FromBytesToDateTime(data, offset);
-            offset += 8;
-            var frameId = ReadMsgString(data, out nextOffset, offset);
+            var seq = ReadRosBaseType<uint>(data, out nextOffset, offset);
+            var originTime = ReadRosBaseType<DateTime>(data, out nextOffset, nextOffset);
+            var frameId = ReadRosBaseType<string>(data, out nextOffset, nextOffset);
             return (seq, originTime, frameId);
         }
-
 
         internal static DateTime FromBytesToDateTime(byte[] timeBytes, int offset = 0)
         {

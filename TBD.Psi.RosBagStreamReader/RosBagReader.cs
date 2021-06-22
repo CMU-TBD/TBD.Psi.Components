@@ -137,7 +137,7 @@ namespace TBD.Psi.RosBagStreamReader
                     // generate all the information needed by the Psi Store
                     info.Value.sourceId = streamIds;
                     var psiStreamMetaData = new RosStreamMetaData(info.Key, streamIds, info.Value.deserializer.AssemblyName,
-                        this.FirstBagName, this.BagDirectory, info.Value.StartTime, info.Value.EndTime, 0, info.Value.MessageCount, 0
+                        this.FirstBagName, this.BagDirectory, info.Value.StartTime, info.Value.EndTime,0,info.Value.MessageCount, 0
                     );
                     psiStreamMetaData.deserializeTypeName = info.Value.deserializer.AssemblyName;
                     streamMetaList.Add(psiStreamMetaData);
