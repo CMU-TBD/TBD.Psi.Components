@@ -19,6 +19,7 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: |
+        ls
         cd TBD.Psi.Components/TBD.Psi.Components
         dotnet restore tbd.psi.rosbagstreamreader
     - name: Build
