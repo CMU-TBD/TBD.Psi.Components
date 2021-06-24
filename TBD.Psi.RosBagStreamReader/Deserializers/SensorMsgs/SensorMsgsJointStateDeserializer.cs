@@ -20,10 +20,10 @@
             (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var offset, 0);
             this.UpdateEnvelope(ref env, originTime);
 
-            string[] names = Helper.ReadRosBaseTypeArray<string>(data, "string", out offset, offset);
-            double[] position = Helper.ReadRosBaseTypeArray<double>(data, "float64", out offset, offset);
-            double[] velocity = Helper.ReadRosBaseTypeArray<double>(data, "float64", out offset, offset);
-            double[] effort = Helper.ReadRosBaseTypeArray<double>(data, "float64", out offset, offset);
+            string[] names = Helper.ReadRosBaseTypeArray<string>(data, out offset, offset);
+            double[] position = Helper.ReadRosBaseTypeArray<double>(data, out offset, offset);
+            double[] velocity = Helper.ReadRosBaseTypeArray<double>(data, out offset, offset);
+            double[] effort = Helper.ReadRosBaseTypeArray<double>(data, out offset, offset);
 
             return (T) (object) (names, position, velocity, effort);
         }

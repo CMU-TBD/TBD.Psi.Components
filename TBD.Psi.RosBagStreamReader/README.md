@@ -107,6 +107,9 @@ private void loadDeserializers()
 2. `tf` and `tf_static` will be parsed differently.
 
 ## Changelog
+#### 2021-06-24
+- Added `Point` and `ColorRGBA`.
+- Code cleanup.
 #### 2021-06-22
 - Added a few direct OpenCV image encodings.
 #### 2021-06-21

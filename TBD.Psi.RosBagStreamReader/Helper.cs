@@ -159,7 +159,7 @@ namespace TBD.Psi.RosBagStreamReader
             }
         }
 
-        internal static T[] ReadRosBaseTypeArray<T>(byte[] data, string type, out int nextOffset, int offset = 0)
+        internal static T[] ReadRosBaseTypeArray<T>(byte[] data, out int nextOffset, int offset = 0)
         {
             // get the length of array 
             var length = BitConverter.ToUInt32(data, offset);

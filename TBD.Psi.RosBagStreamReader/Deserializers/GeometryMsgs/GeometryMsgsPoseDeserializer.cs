@@ -41,10 +41,7 @@
         public static CoordinateSystem Deserialize(byte[] data, ref int offset)
         {
             // get Point
-            var position_x = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var position_y = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var position_z = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var point = new Point3D(position_x, position_y, position_z);
+            var point = GeometrymsgsPointDeserializer.Deserialize(data, ref offset);
             // quaternion
             var quaternion_x = Helper.ReadRosBaseType<double>(data, out offset, offset);
             var quaternion_y = Helper.ReadRosBaseType<double>(data, out offset, offset);
