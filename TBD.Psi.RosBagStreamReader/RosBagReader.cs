@@ -134,15 +134,24 @@ namespace TBD.Psi.RosBagStreamReader
                 {
                     // found a deserializer for this type.
                     info.Value.deserializer = this.deserializers[info.Value.Type];
-                    // generate all the information needed by the Psi Store
-                    info.Value.sourceId = streamIds;
-                    var psiStreamMetaData = new RosStreamMetaData(info.Key, streamIds, info.Value.deserializer.AssemblyName,
-                        this.FirstBagName, this.BagDirectory, info.Value.StartTime, info.Value.EndTime,0,info.Value.MessageCount, 0
-                    );
-                    psiStreamMetaData.deserializeTypeName = info.Value.deserializer.AssemblyName;
-                    streamMetaList.Add(psiStreamMetaData);
-                    streamIds++;
                 }
+                else
+                {
+                    // add generic deserializer
+                    info.Value.deserializer = new GenericMsgDeserializer(info.Value, true);
+
+                }
+
+                // create all the values for the stream
+                info.Value.sourceId = streamIds;
+                var psiStreamMetaData = new RosStreamMetaData(info.Key, streamIds, info.Value.deserializer.AssemblyName,
+                    this.FirstBagName, this.BagDirectory, info.Value.StartTime, info.Value.EndTime, 0, info.Value.MessageCount, 0
+                )
+                {
+                    deserializeTypeName = info.Value.deserializer.AssemblyName
+                };
+                streamMetaList.Add(psiStreamMetaData);
+                streamIds++;
             }
         }
 

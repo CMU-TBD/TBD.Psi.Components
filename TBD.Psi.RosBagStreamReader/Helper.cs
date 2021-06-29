@@ -87,6 +87,34 @@ namespace TBD.Psi.RosBagStreamReader
             return fieldProperties;
         }
 
+        internal static int GetRosBaseTypeByteLength(string type)
+        {
+            switch (type)
+            {
+                case "bool":
+                case "uint8":
+                case "int8":
+                    return 1;
+                case "uint16":
+                case "int16":
+                    return 2;
+                case "uint32":
+                case "int32":
+                case "float32":
+                    return 4;
+                case "uint64":
+                case "int64":
+                case "float64":
+                case "time":
+                case "duration":
+                    return 8;
+                case "string":
+                    throw new InvalidCastException("Length of string can only be known at runtime.");
+                default:
+                    throw new InvalidCastException($"{type} is not a ROS primitive type.");
+            }
+        }
+
         internal static T ReadRosBaseType<T>(byte[] data, out int nextOffset, int offset = 0)
         {
             switch (Type.GetTypeCode(typeof(T)))

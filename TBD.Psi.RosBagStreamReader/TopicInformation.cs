@@ -56,7 +56,7 @@ namespace TBD.Psi.RosBagStreamReader
         public int MessageCount = 0;
 
         // Tuple of name and assembly type of the fields.
-        public List<(string, string)> TopicFields;
+        public List<(string name, string type)> TopicFields;
 
         // Table of known topic definitions from the text.
         public Dictionary<string, List<(string, string)>> TopicDependencyTable;
