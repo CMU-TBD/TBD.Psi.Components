@@ -46,7 +46,7 @@ namespace TBD.Psi.RosBagStreamReader
                 var nextRecordOffset = ReadSingleRosBagHeader(bagIndex, 13);
                 // dictionary to help facilitate faster lookup
                 var topicMapping = new Dictionary<int, string>();
-                // read until we reach end of file stream
+                // read until we reach end of file stream.
                 while (nextRecordOffset < fileStream.Length)
                 {
                     // read next record

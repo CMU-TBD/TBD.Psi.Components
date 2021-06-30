@@ -28,6 +28,7 @@ namespace TBD.Psi.RosBagStreamReader.Deserializers
                             if (fields.type == "Header" || fields.type == "std_msgs/Header")
                             {
                                 headerOffset = offset;
+                                break;
                             }
                             offset += Helper.GetRosBaseTypeByteLength(fields.type);
                         }
