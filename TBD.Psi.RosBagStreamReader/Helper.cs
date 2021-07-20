@@ -115,7 +115,7 @@ namespace TBD.Psi.RosBagStreamReader
             }
         }
 
-        internal static T ReadRosBaseType<T>(byte[] data, out int nextOffset, int offset = 0)
+        public static T ReadRosBaseType<T>(byte[] data, out int nextOffset, int offset = 0)
         {
             switch (Type.GetTypeCode(typeof(T)))
             {
@@ -187,7 +187,12 @@ namespace TBD.Psi.RosBagStreamReader
             }
         }
 
-        internal static T[] ReadRosBaseTypeArray<T>(byte[] data, out int nextOffset, int offset = 0)
+        public static T ReadRosBaseType<T>(byte[] data, int offset = 0)
+        {
+            return ReadRosBaseType<T>(data, out int temp, offset);
+        }
+
+        public static T[] ReadRosBaseTypeArray<T>(byte[] data, out int nextOffset, int offset = 0)
         {
             // get the length of array 
             var length = BitConverter.ToUInt32(data, offset);
@@ -201,20 +206,18 @@ namespace TBD.Psi.RosBagStreamReader
             return arr;
         }
 
+        public static T[] ReadRosBaseTypeArray<T>(byte[] data, int offset = 0)
+        {
+            return ReadRosBaseTypeArray<T>(data, out int temp, offset);
+        }
+        
+
         internal static (uint, DateTime, string) ReadStdMsgsHeader(byte[] data, out int nextOffset, int offset = 0)
         {
             var seq = ReadRosBaseType<uint>(data, out nextOffset, offset);
             var originTime = ReadRosBaseType<DateTime>(data, out nextOffset, nextOffset);
             var frameId = ReadRosBaseType<string>(data, out nextOffset, nextOffset);
             return (seq, originTime, frameId);
-        }
-
-        internal static DateTime FromBytesToDateTime(byte[] timeBytes, int offset = 0)
-        {
-            var seconds = BitConverter.ToUInt32(timeBytes, offset);
-            var nanoSeconds = BitConverter.ToUInt32(timeBytes, offset + 4);
-
-            return DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime + TimeSpan.FromTicks(nanoSeconds / 100);
         }
     }
 }

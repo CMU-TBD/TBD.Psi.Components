@@ -1,5 +1,5 @@
 # TBD.Psi.RosBagStreamReader
-COPYRIGHT(C) 2021 - Transportation, Bots, and Disability Lab - CMU
+COPYRIGHT(C) 2021 - Transportation, Bots, and Disability Lab - CMU  
 Code released under MIT.
 
 ## Funding
@@ -16,29 +16,43 @@ using (var p = Pipeline.Create())
 ```
 The component can handle ROS bag splited into multiple files, but they have to be by themselves and have the same prefixes. 
 
-You can also add the `dll` to PsiStudio to enable direct reading of ROSBAGs in PsiStudio. Add the path to the built dll under `AdditionalAssemblies` in `PsiStudioSettings.xml`.
-
+## How to Install
+### For using in PsiStudio
+1. Clone this repository
+2. Build the `TBD.Psi.RosBagStreamReader.Windows` project.
+    - In Visual Studio, hover over the project in the solution explorer, right-click on the project, and build.
+3. Find the path for the built dll.
+    - The path should look like this ``
+4. Add the dll as an `AdditionalAssemblies` in the `PsiStudioSettings.xml`. More detail here: [3rd Part Visualizer](https://github.com/microsoft/psi/wiki/3rd-Party-Visualizers)
+    - If the file doesn't exist, start and quit PsiStudio once to generate it.
+### To use it in application
+1. Clone this repository
+2. Reference either the .NET 5.0 version (`TBD.Psi.RosBagStreamReader.NET`) for Linux/Mac applications OR .NET framework (`TBD.Psi.RosBagStreamReader.Windows`) for Windows applications.
+P
 ## Supported Messages
-|ROS Message Type | Deserialized Psi Types|Notes|
-|---|---|---|
-|std_msgs/String| `string` ||
-|std_msgs/Bool| `bool` ||
-|sensor_msgs/Image| `Shared<Image>` |Only some formats are supported|
-|sensor_msgs/CompressedImage| `Shared<Image>` |Only some formats are supported|
-|sensor_msgs/JointState| `(string[] name, double[] position, double[] velocity, double[] effort)` ||
-|geometry_msgs/PoseStamped| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
-|geometry_msgs/Pose| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
-|geometry_msgs/Transform| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
-|geometry_msgs/TransformStamped| `MathNet.Spatial.Euclidean.CoordinateSystem` ||
-|geometry_msgs/Quaternion| `MathNet.Spatial.Euclidean.Quaternion` ||
-|geometry_msgs/Vector3| `MathNet.Spatial.Euclidean.Vector3D` ||
-|audio_common_msgs/AudioData| `AudioBuffer` ||
-|tf2/TFmessage| `tbd.psi.TransformationTree` ||
+| ROS Message Type               | Deserialized Psi/C# Types                                                   | Windows/Linux/Mac Support    | Notes                           |
+| ------------------------------ | ------------------------------------------------------------------------ | ---------------------------- | ------------------------------- |
+| std_msgs/String                | `string`                                                                 | All                          |                                 |
+| std_msgs/Bool                  | `bool`                                                                   | All                          |                                 |
+| sensor_msgs/Image              | `Shared<Image>`                                                          | All                          | Only some formats are supported |
+| sensor_msgs/CompressedImage    | `Shared<Image>`                                                          | All                          | Only some formats are supported |
+| sensor_msgs/JointState         | `(string[] name, double[] position, double[] velocity, double[] effort)` | All                          |                                 |
+| geometry_msgs/PoseStamped      | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
+| geometry_msgs/Pose             | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
+| geometry_msgs/Transform        | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
+| geometry_msgs/TransformStamped | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
+| geometry_msgs/Quaternion       | `MathNet.Spatial.Euclidean.Quaternion`                                   | All                          |                                 |
+| geometry_msgs/Vector3          | `MathNet.Spatial.Euclidean.Vector3D`                                     | All                          |                                 |
+| audio_common_msgs/AudioData    | `AudioBuffer`                                                            | All                          |                                 |
+
+
+<!--                           | tf2/TFmessage                                                            | `tbd.psi.TransformationTree` |                                 | --> 
 
 Contributions for more Deserializers are welcomed!
 
 ## Build your own Deserializers
 Building your own deserializer for any ROS Message is pretty straightforward.
+### Create A Deserializer
 1. Create a deserializer with `MsgDeserializer.cs` as its parent. Pass to the parent the type of object it should be converted to (`AudioBuffer` in the example) and the name of the ROS Message it is trying to decode. 
 ```csharp
     class AudioCommonMsgsAudioDataDeserializer : MsgDeserializer
@@ -59,21 +73,16 @@ You can also change the envelop property based on the ROS Message data. This is 
 ROS Messages are just an array of bytes with the reading location define by the ROS Message Definition. For example, `audio_common_msgs/AudioData` message states it has a `data` with the type `uint8[]`, the byte array is simply an array of `uint8` with the first 4 bytes being the length of the array. A more complex message type like `std_msgs/Header` can be decoded as following
  ```csharp
 // sequence
-var seq = BitConverter.ToUInt32(data, offset);
-offset += 4;
+var offset = 0;
+var seq = Helper.ReadRosBaseType<uint>(data, out offset, offset); // helper functions returns the next offset.
 // time
-var seconds = BitConverter.ToUInt32(timeBytes, offset);
-offset += 4;
-var nanoSeconds = BitConverter.ToUInt32(timeBytes, offset);
-offset += 4;
+var seconds = Helper.ReadRosBaseType<uint>(data, out offset, offset);
+var nanoSeconds = Helper.ReadRosBaseType<uint>(data, out offset, offset);
 // frame_id
-// get string length
-var strlen = (int)BitConverter.ToUInt32(data, offset);
-// get the string
-var str = Encoding.UTF8.GetString(data, offset + 4, strlen);
+var str = Helper.ReadRosBaseType<string>(data, out offset, offset);
  ```
-You can find Helper methods to decode in `Helper.cs`. Some message deserializers also comes with a strongly-typed `Deserialize` function that allows you to use it to deserialize parts of a message. Here's an example from `geometry_msgs/Transform`
-```
+You can find Helper methods to decode base types in `Helper.cs`. Some message deserializers also comes with a strongly-typed `Deserialize` function that allows you to use it to deserialize parts of a message. Here's an example from `geometry_msgs/Transform`
+```csharp
 public static CoordinateSystem Deserialize(byte[] data, ref int offset)
 {
     // get the translation vector
@@ -93,20 +102,37 @@ public override T Deserialize<T>(byte[] data, ref Envelope env)
     return (T)(object)cs;
 }
 ```
+### Add deserializer
+Depending on your usecase, you have two options. 
 
-
-3. Add the deserializer to the `loadDeserializers` method in `RosBagReader.cs`. We are looking into automating this in the future.
+If the deserializer is not framework specific, you can add it straight into the base package. Add the deserializer to the `loadDefaultDeserializers` method in `RosBagReader.cs`. If you want to match it with specific names, you can also pass in an optional topic name.
 ```csharp
-private void loadDeserializers()
+private void loadDefaultDeserializers()
 {
-    this.loadDeserializer(new StdMsgsStringDeserializer());
+    this.AddDeserializer(new StdMsgsStringDeserializer());
+    this.AddDeserializer(new SensorMsgsImageDeserializer(), "image");
+    this.AddDeserializer(new SensorMsgsImageDeserializer(), "/robot/front_camera/image");
 ```
+
+If the deserializer is framework specific, you can add it to either `TBD.Psi.RosBagStreamReader.NET` for Linux/Mac and `TBD.Psi.RosBagStreamReader.Windows` for Windows. For those packages. it is added to the constructor of either `RosBagStreamReaderNET` or `RosBagStreamReaderWindows`.
+```csharp
+    public RosBagReaderNET()
+        : base()
+        {
+            this.AddDeserializer(new UniquelyWindowsDeserializers());
+        }
+```
+
 
 ## Known Limitations
 1. Currently, the deserializers does not handle encrypted ROS Bags.
 2. `tf` and `tf_static` will be parsed differently.
 
 ## Changelog
+#### 2021-07-20
+- Split into Windows and .NET 5. 
+- Remove TF due to it being not stable.
+
 #### 2021-06-29
 - Added a default generic message reader for unknown class. It tries to read the header and use the header time if possible.
 #### 2021-06-24

@@ -16,9 +16,8 @@
             // open steam reader
             var streamReader = new RosBagStreamReader("basic_string.bag", "TestBags");
             // check if it knows there are two streams & names are correct
-            Assert.AreEqual(streamReader.AvailableStreams.Count(), 1);
-            string[] expectedTopicList = { "/text" };
-            CollectionAssert.AreEqual( streamReader.AvailableStreams.Select(m => m.Name).ToList(), expectedTopicList);
+            string[] expectedTopicList = { "/rosout", "/text" };
+            CollectionAssert.AreEquivalent(expectedTopicList, streamReader.AvailableStreams.Select(m => m.Name).ToList());
         }
 
         [TestMethod]
@@ -37,7 +36,7 @@
         {
             // open steam reader
             var streamReader = new RosBagStreamReader("basic_string.bag", "TestBags");
-            Assert.AreEqual(streamReader.StreamCount, 1);
+            Assert.AreEqual(2, streamReader.StreamCount);
         }
 
         [TestMethod]
@@ -45,9 +44,9 @@
         {
             // open steam reader
             var streamReader = new RosBagStreamReader("basic_string.bag", "TestBags");
-            Assert.AreEqual(streamReader.GetStreamMetadata("/text").MessageCount, 56);
-            Assert.AreEqual(streamReader.GetStreamMetadata("/text").AverageMessageSize, 0);
-            Assert.AreEqual(streamReader.GetStreamMetadata("/text").AverageMessageLatencyMs, 0);
+            Assert.AreEqual(56, streamReader.GetStreamMetadata("/text").MessageCount);
+            Assert.AreEqual(0, streamReader.GetStreamMetadata("/text").AverageMessageSize);
+            Assert.AreEqual(0, streamReader.GetStreamMetadata("/text").AverageMessageLatencyMs);
         }
 
         [TestMethod]
@@ -55,8 +54,8 @@
         {
             // open steam reader
             var streamReader = new RosBagStreamReader("sample_image_0.bag", "TestBags");
-            Assert.AreEqual(streamReader.GetStreamMetadata("/usb_cam/image_raw/compressed").MessageCount, 24);
-            Assert.AreEqual(streamReader.StreamTimeInterval.Span.TotalSeconds, 0.76, 0.1);
+            Assert.AreEqual(24, streamReader.GetStreamMetadata("/usb_cam/image_raw/compressed").MessageCount);
+            Assert.AreEqual(0.76, streamReader.StreamTimeInterval.Span.TotalSeconds, 0.1);
         }
 
     }

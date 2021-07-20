@@ -15,21 +15,24 @@ namespace TBD.Psi.RosBagStreamReader
         private List<FileStream> bagFileStreams = new List<FileStream>();
         private Dictionary<string, TopicInformation> metaInformation = new Dictionary<string, TopicInformation>();
         private List<RosStreamMetaData> streamMetaList = new List<RosStreamMetaData>();
-        private Dictionary<string, MsgDeserializer> deserializers = new Dictionary<string, MsgDeserializer>();
+        private Dictionary<string, MsgDeserializer> typeDeserializers = new Dictionary<string, MsgDeserializer>();
+        private List<(string name, MsgDeserializer deserializer)> nameDeserializers = new List<(string, MsgDeserializer)>();
         private readonly object streamLock = new object();
 
         private DateTime bagStartTime;
         private DateTime bagEndTime;
 
-        public RosBagReader(List<string> paths)
+        public RosBagReader()
         {
+            this.loadDefaultDeserializers();
+        }
 
+        public void Initialize(List<string> paths)
+        {
+            // we assume the incoming path is already sorted
             this.FirstBagName = System.IO.Path.GetFileName(paths[0]);
             this.BagDirectory = System.IO.Path.GetDirectoryName(paths[0]);
 
-            this.loadDeserializers();
-
-             
             // Read bags one by one
             // get information about the topics
             foreach (var path in paths)
@@ -84,8 +87,8 @@ namespace TBD.Psi.RosBagStreamReader
                             var count = BitConverter.ToInt32(headers["count"], 0);
 
                             // update the start and end time
-                            var startTime = Helper.FromBytesToDateTime(headers["start_time"]);
-                            var endTime = Helper.FromBytesToDateTime(headers["end_time"]);
+                            var startTime = Helper.ReadRosBaseType<DateTime>(headers["start_time"]);
+                            var endTime = Helper.ReadRosBaseType<DateTime>(headers["end_time"]);
 
                             // get all the connections and counts
                             for (var i = 0; i < count; i++)
@@ -128,12 +131,25 @@ namespace TBD.Psi.RosBagStreamReader
             int streamIds = 0;
             foreach (var info in metaInformation)
             {
+                // see if there is a match in terms of name
+                var nameMatches = this.nameDeserializers.Where(p => info.Key.Contains(p.name) && p.deserializer.RosMessageTypeName == info.Value.Type);
+                if (nameMatches.Count() > 0)
+                {
+                    // check for perfect matches
+                    if (nameMatches.Where(m => m.name == info.Key).Any())
+                    {
+                        info.Value.deserializer = nameMatches.Where(m => m.name == info.Key).First().deserializer;
+                    }
+                    else
+                    {
+                        info.Value.deserializer = nameMatches.First().deserializer;
+                    }
+                }
                 // see if there is a registered type of converter for this message type.
-                // the converter takes in bytes[] and return the correct fixed types
-                if (this.deserializers.ContainsKey(info.Value.Type))
+                else if (this.typeDeserializers.ContainsKey(info.Value.Type))
                 {
                     // found a deserializer for this type.
-                    info.Value.deserializer = this.deserializers[info.Value.Type];
+                    info.Value.deserializer = this.typeDeserializers[info.Value.Type];
                 }
                 else
                 {
@@ -155,33 +171,43 @@ namespace TBD.Psi.RosBagStreamReader
             }
         }
 
-        private void loadDeserializer(MsgDeserializer deserializer)
+        public void AddDeserializer(MsgDeserializer deserializer, string topicName = "")
         {
-            this.deserializers[deserializer.RosMessageTypeName] = deserializer;
+            if (topicName != "")
+            {
+                this.nameDeserializers.Add((topicName, deserializer));
+            }
+            else
+            {
+                this.typeDeserializers[deserializer.RosMessageTypeName] = deserializer;
+            }
         }
 
-        private void loadDeserializers()
+        private void loadDefaultDeserializers()
         {
-            this.loadDeserializer(new StdMsgsStringDeserializer());
-            this.loadDeserializer(new StdMsgsBoolDeserializer());
-            this.loadDeserializer(new StdMsgsColorRGBADeserializer());
-            this.loadDeserializer(new SensorMsgsImageDeserializer(true));
-            this.loadDeserializer(new SensorMsgsCompressedImageDeserializer(true));      
-            this.loadDeserializer(new SensorMsgsJointStateDeserializer(true));      
-            this.loadDeserializer(new AudioCommonMsgsAudioDataDeserializer());
-            this.loadDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
-            this.loadDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
-            this.loadDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
-            this.loadDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
-            this.loadDeserializer(new GeometrymsgsPointDeserializer());
-            this.loadDeserializer(new GeometrymsgsPoseDeserializer());
-            this.loadDeserializer(new GeometrymsgsQuaternionDeserializer());
-            this.loadDeserializer(new GeometrymsgsTransformDeserializer());
-            this.loadDeserializer(new GeometrymsgsVector3Deserializer());
-            this.loadDeserializer(new TFMessageDeserializer());
+            // load named deserializers
+            this.AddDeserializer(new SensorMsgsImageAsDepthImageDeserializer(true), "depth");
+            // load generic deserializers
+            this.AddDeserializer(new StdMsgsStringDeserializer());
+            this.AddDeserializer(new StdMsgsBoolDeserializer());
+            this.AddDeserializer(new StdMsgsColorRGBADeserializer());
+            this.AddDeserializer(new SensorMsgsImageDeserializer(true));
+            this.AddDeserializer(new SensorMsgsCompressedImageDeserializer(true));
+            this.AddDeserializer(new SensorMsgsJointStateDeserializer(true));
+            this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());
+            this.AddDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
+            this.AddDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
+            this.AddDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
+            this.AddDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
+            this.AddDeserializer(new GeometrymsgsPointDeserializer());
+            this.AddDeserializer(new GeometrymsgsPoseDeserializer());
+            this.AddDeserializer(new GeometrymsgsQuaternionDeserializer());
+            this.AddDeserializer(new GeometrymsgsTransformDeserializer());
+            this.AddDeserializer(new GeometrymsgsVector3Deserializer());
         }
 
-        public IEnumerable<RosStreamMetaData> GetStreamMetaData() {
+        public IEnumerable<RosStreamMetaData> GetStreamMetaData()
+        {
             return this.streamMetaList;
         }
 
@@ -189,11 +215,13 @@ namespace TBD.Psi.RosBagStreamReader
 
         public string BagDirectory { private set; get; }
 
-        public DateTime BagStartTime {
+        public DateTime BagStartTime
+        {
             get => this.bagStartTime;
         }
 
-        public DateTime BagEndTime {
+        public DateTime BagEndTime
+        {
             get => this.bagEndTime;
         }
 
@@ -291,7 +319,7 @@ namespace TBD.Psi.RosBagStreamReader
                 this.bagFileStreams[topicInfo.bagIndex].Read(indexDataBytes, 0, 12);
             }
             // get the time and offset
-            var messageTime = Helper.FromBytesToDateTime(indexDataBytes, 0);
+            var messageTime = Helper.ReadRosBaseType<DateTime>(indexDataBytes);
             // get offset
             var offset = BitConverter.ToInt32(indexDataBytes, 8);
 
@@ -330,7 +358,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.metaInformation[topic].bagIndex = 0;
             this.metaInformation[topic].ChunkIndex = 0;
             this.metaInformation[topic].ChunkMsgIndex = 0;
-         
+
         }
 
 

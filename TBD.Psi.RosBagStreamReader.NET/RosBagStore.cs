@@ -1,4 +1,6 @@
-﻿
+﻿// Copyright (c) Carnegie Mellon University. All rights reserved.
+// Licensed under the MIT license.
+
 namespace TBD.Psi.RosBagStreamReader
 {
     using Microsoft.Psi;

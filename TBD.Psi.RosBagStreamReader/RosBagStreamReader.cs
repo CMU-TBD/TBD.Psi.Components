@@ -20,8 +20,14 @@ namespace TBD.Psi.RosBagStreamReader
         private Dictionary<string, List<Action<int, long, int, Envelope>>> outputTargets = new Dictionary<string, List<Action<int, long, int, Envelope>>>();
 
         public RosBagStreamReader(string name, string path)
+            : this(name, path, new RosBagReader())
         {
-            // get all bags in that directory
+        }
+
+        public RosBagStreamReader(string name, string path, RosBagReader reader)
+            : this(reader)
+        {
+            // get all the bags in the directory with the same prefix.
             string searchPattern = "*.bag";
             if (name.Contains('_'))
             {
@@ -30,9 +36,8 @@ namespace TBD.Psi.RosBagStreamReader
             var bagFiles = Directory.GetFiles(path, searchPattern).ToList();
             bagFiles.Sort();
 
-            // Use the interface to the read the bag
-            bagInterface = new RosBagReader(bagFiles);
-
+            // use the assigned interface to read the bagfiles
+            this.bagInterface.Initialize(bagFiles);
         }
 
         public RosBagStreamReader(RosBagReader reader)

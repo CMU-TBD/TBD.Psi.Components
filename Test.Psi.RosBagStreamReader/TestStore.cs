@@ -18,9 +18,9 @@
             {
                 // open importer
                 var store = RosBagStore.Open(p, "basic_string.bag", "TestBags");
-                // validate store informations
-                Assert.AreEqual(store.AvailableStreams.Count(), 1);
-                Assert.AreEqual(store.AvailableStreams.First().Name, "/text");
+                // validate store information
+                Assert.AreEqual(2, store.AvailableStreams.Count());
+                Assert.IsTrue(store.AvailableStreams.Select(s => s.Name).Contains("/text"));
             }
         }
 
@@ -36,7 +36,7 @@
                 var i = 3;
                 stream.Do(m =>
                 {
-                    Assert.AreEqual(m, $"Hello {i++}");
+                    Assert.AreEqual($"Hello {i++}", m);
                 });
                 p.Run(ReplayDescriptor.ReplayAll);
             }
