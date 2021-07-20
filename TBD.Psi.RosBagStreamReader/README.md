@@ -29,21 +29,26 @@ The component can handle ROS bag splited into multiple files, but they have to b
 1. Clone this repository
 2. Reference either the .NET 5.0 version (`TBD.Psi.RosBagStreamReader.NET`) for Linux/Mac applications OR .NET framework (`TBD.Psi.RosBagStreamReader.Windows`) for Windows applications.
 P
+
 ## Supported Messages
-| ROS Message Type               | Deserialized Psi/C# Types                                                   | Windows/Linux/Mac Support    | Notes                           |
-| ------------------------------ | ------------------------------------------------------------------------ | ---------------------------- | ------------------------------- |
-| std_msgs/String                | `string`                                                                 | All                          |                                 |
-| std_msgs/Bool                  | `bool`                                                                   | All                          |                                 |
-| sensor_msgs/Image              | `Shared<Image>`                                                          | All                          | Only some formats are supported |
-| sensor_msgs/CompressedImage    | `Shared<Image>`                                                          | All                          | Only some formats are supported |
-| sensor_msgs/JointState         | `(string[] name, double[] position, double[] velocity, double[] effort)` | All                          |                                 |
-| geometry_msgs/PoseStamped      | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
-| geometry_msgs/Pose             | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
-| geometry_msgs/Transform        | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
-| geometry_msgs/TransformStamped | `MathNet.Spatial.Euclidean.CoordinateSystem`                             | All                          |                                 |
-| geometry_msgs/Quaternion       | `MathNet.Spatial.Euclidean.Quaternion`                                   | All                          |                                 |
-| geometry_msgs/Vector3          | `MathNet.Spatial.Euclidean.Vector3D`                                     | All                          |                                 |
-| audio_common_msgs/AudioData    | `AudioBuffer`                                                            | All                          |                                 |
+| ROS Message Type               | Deserialized Psi/C# Types                                                | Name Match | Windows/Linux/Mac Support | Notes                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------ | ---------- | ------------------------- | -------------------------------------------------------------------------- |
+| std_msgs/String                | `string`                                                                 |            | All                       |                                                                            |
+| std_msgs/Bool                  | `bool`                                                                   |            | All                       |                                                                            |
+| std_msgs/ColorRGBA             | `double[]`                                                               |            | All                       | Return as a length 4 double array. Values are in the order of R,G,B,and A. |
+| sensor_msgs/Image              | `Shared<Image>`                                                          |            | All                       | Only some formats are supported.                                           |
+| sensor_msgs/Image              | `Shared<DepthImage>`                                                     | `depth`    | All                       | Only some formats are supported.                                           |
+| sensor_msgs/CompressedImage    | `Shared<Image>`                                                          |            | All                       | Only some formats are supported.                                           |
+| sensor_msgs/JointState         | `(string[] name, double[] position, double[] velocity, double[] effort)` |            | All                       |                                                                            |
+| geometry_msgs/PoseStamped      | `MathNet.Spatial.Euclidean.CoordinateSystem`                             |            | All                       |                                                                            |
+| geometry_msgs/Pose             | `MathNet.Spatial.Euclidean.CoordinateSystem`                             |            | All                       |                                                                            |
+| geometry_msgs/Transform        | `MathNet.Spatial.Euclidean.CoordinateSystem`                             |            | All                       |                                                                            |
+| geometry_msgs/TransformStamped | `MathNet.Spatial.Euclidean.CoordinateSystem`                             |            | All                       |                                                                            |
+| geometry_msgs/Quaternion       | `MathNet.Spatial.Euclidean.Quaternion`                                   |            | All                       |                                                                            |
+| geometry_msgs/Vector3          | `MathNet.Spatial.Euclidean.Vector3D`                                     |            | All                       |                                                                            |
+| audio_common_msgs/AudioData    | `AudioBuffer`                                                            |            | All                       |                                                                            |
+
+For message types with multiple deserializers (e.g. `sensor/Image`), the application will try to match deserializers by name according to the `Name Match` column first before moving on to the default (no name match deserializers). For example, a ros topic of type `sensor_msgs/Image` with name `depth_image` will be converted into `Shared<DepthImage>` instead of `Shared<Image>`. The name match is **case insensetive**.
 
 
 <!--                           | tf2/TFmessage                                                            | `tbd.psi.TransformationTree` |                                 | --> 
