@@ -94,6 +94,8 @@ namespace TBD.Psi.RosBagStreamReader
                 case "bool":
                 case "uint8":
                 case "int8":
+                case "char":
+                case "byte":
                     return 1;
                 case "uint16":
                 case "int16":

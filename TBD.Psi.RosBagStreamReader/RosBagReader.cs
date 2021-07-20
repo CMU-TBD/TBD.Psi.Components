@@ -188,22 +188,43 @@ namespace TBD.Psi.RosBagStreamReader
             // load named deserializers
             this.AddDeserializer(new SensorMsgsImageAsDepthImageDeserializer(true), "depth");
             // load generic deserializers
-            this.AddDeserializer(new StdMsgsStringDeserializer());
-            this.AddDeserializer(new StdMsgsBoolDeserializer());
+            // std_msgs
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<string>("std_msgs/String"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<bool>("std_msgs/Bool"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<sbyte>("std_msgs/Byte"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<byte>("std_msgs/Char"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<float>("std_msgs/Float32"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<double>("std_msgs/Float64"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<sbyte>("std_msgs/Int8"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<byte>("std_msgs/UInt8"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<Int16>("std_msgs/Int16"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<UInt16>("std_msgs/UInt16"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<Int32>("std_msgs/Int32"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<UInt32>("std_msgs/UInt32"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<Int64>("std_msgs/Int64"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<UInt64>("std_msgs/UInt64"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<DateTime>("std_msgs/Time"));
+            this.AddDeserializer(new StdMsgsDefaultDeserializer<TimeSpan>("std_msgs/Duration"));
             this.AddDeserializer(new StdMsgsColorRGBADeserializer());
+            
+            // sensor_msgs 
             this.AddDeserializer(new SensorMsgsImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsCompressedImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsJointStateDeserializer(true));
-            this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());
-            this.AddDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
-            this.AddDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
-            this.AddDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
+
+            // geometry_msgs
             this.AddDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
             this.AddDeserializer(new GeometrymsgsPointDeserializer());
             this.AddDeserializer(new GeometrymsgsPoseDeserializer());
             this.AddDeserializer(new GeometrymsgsQuaternionDeserializer());
             this.AddDeserializer(new GeometrymsgsTransformDeserializer());
             this.AddDeserializer(new GeometrymsgsVector3Deserializer());
+
+            // others
+            this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());
+            this.AddDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
+            this.AddDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
+            this.AddDeserializer(new TBDAudioMsgsUtterancedDeserializer(true));
         }
 
         public IEnumerable<RosStreamMetaData> GetStreamMetaData()
