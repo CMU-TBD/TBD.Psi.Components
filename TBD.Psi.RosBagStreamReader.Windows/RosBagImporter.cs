@@ -16,7 +16,7 @@ namespace TBD.Psi.RosBagStreamReader
             string name,
             string path,
             bool perStreamReader = false)
-            : base(pipeline, new RosBagStreamReader(name, path), perStreamReader)
+            : base(pipeline, new RosBagStreamReaderWindows(name, path), perStreamReader)
         {
         }
 

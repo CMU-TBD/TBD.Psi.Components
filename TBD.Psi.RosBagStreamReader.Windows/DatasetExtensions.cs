@@ -16,7 +16,7 @@ namespace TBD.Psi.RosBagStreamReader
             string partitionName = null)
         {
             return dataset.AddSessionFromStore(
-                new RosBagStreamReader(
+                new RosBagStreamReaderWindows(
                     storeName,
                     storePath),
                 sessionName,

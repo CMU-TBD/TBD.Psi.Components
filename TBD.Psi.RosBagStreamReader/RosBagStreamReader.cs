@@ -11,7 +11,6 @@ namespace TBD.Psi.RosBagStreamReader
     using System.IO;
     using System.Runtime.Serialization;
 
-    [StreamReader("ROS Bags", ".bag")]
     public class RosBagStreamReader : IStreamReader
     {
         private RosBagReader bagInterface;
