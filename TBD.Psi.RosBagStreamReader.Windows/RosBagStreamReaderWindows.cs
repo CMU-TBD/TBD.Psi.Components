@@ -8,7 +8,7 @@ namespace TBD.Psi.RosBagStreamReader
     [StreamReader("ROS Bags", ".bag")]
     public class RosBagStreamReaderWindows : RosBagStreamReader
     {
-        public RosBagStreamReaderNET(string name, string path)
+        public RosBagStreamReaderWindows(string name, string path)
             : base(name, path, new RosBagReaderWindows())
             {
             }

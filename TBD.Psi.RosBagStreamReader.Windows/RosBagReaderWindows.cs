@@ -3,12 +3,15 @@
 
 namespace TBD.Psi.RosBagStreamReader
 {
+    using TBD.Psi.RosBagStreamReader.Deserializers;
+
     public class RosBagReaderWindows: RosBagReader
     {
         public RosBagReaderWindows()
             : base()
-            {
-            }
+        {
+            this.AddDeserializer(new SensorMsgsCompressedImageAsSharedEncodedImageDeserializer(true), "compressed");
+        }
     }
 }
 

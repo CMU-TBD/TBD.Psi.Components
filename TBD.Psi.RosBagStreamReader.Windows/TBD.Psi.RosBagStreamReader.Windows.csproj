@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Psi.Imaging.Windows" Version="0.15.49.1-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TBD.Psi.RosBagStreamReader\TBD.Psi.RosBagStreamReader.csproj" />
   </ItemGroup>
 

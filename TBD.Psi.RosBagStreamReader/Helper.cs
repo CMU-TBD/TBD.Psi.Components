@@ -214,7 +214,7 @@ namespace TBD.Psi.RosBagStreamReader
         }
         
 
-        internal static (uint, DateTime, string) ReadStdMsgsHeader(byte[] data, out int nextOffset, int offset = 0)
+        public static (uint, DateTime, string) ReadStdMsgsHeader(byte[] data, out int nextOffset, int offset = 0)
         {
             var seq = ReadRosBaseType<uint>(data, out nextOffset, offset);
             var originTime = ReadRosBaseType<DateTime>(data, out nextOffset, nextOffset);

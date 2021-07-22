@@ -1,11 +1,6 @@
 ﻿namespace TBD.Psi.RosBagStreamReader.Deserializers
 {
-    using System;
-    using System.Text;
-    using System.Linq;
     using Microsoft.Psi;
-    using Microsoft.Psi.Imaging;
-    using System.IO;
 
     public class SensorMsgsJointStateDeserializer : MsgDeserializer
     {

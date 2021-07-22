@@ -22,7 +22,7 @@ The component can handle ROS bag splited into multiple files, but they have to b
 2. Build the `TBD.Psi.RosBagStreamReader.Windows` project.
     - In Visual Studio, hover over the project in the solution explorer, right-click on the project, and build.
 3. Find the path for the built dll.
-    - The path should look like this ``
+    - The path should look something like this `C:\Users\Zhi\source\repos\CMU-TBD\TBD.Psi.Components\TBD.Psi.RosBagStreamReader.Windows\bin\Debug\net472\TBD.Psi.RosBagStreamReader.Windows.dll`
 4. Add the dll as an `AdditionalAssemblies` in the `PsiStudioSettings.xml`. More detail here: [3rd Part Visualizer](https://github.com/microsoft/psi/wiki/3rd-Party-Visualizers)
     - If the file doesn't exist, start and quit PsiStudio once to generate it.
 ### To use it in application
@@ -147,8 +147,9 @@ If the deserializer is framework specific, you can add it to either `TBD.Psi.Ros
 
 ## Changelog
 #### 2021-07-20
-- Split into Windows and .NET 5. 
+- Split into Windows and .NET 5.
 - Remove TF due to it being not stable.
+- Cleaned up the code.
 
 #### 2021-06-29
 - Added a default generic message reader for unknown class. It tries to read the header and use the header time if possible.

@@ -1,11 +1,11 @@
-﻿using System;
-
+﻿
 namespace TBD.Psi.RosSharpBridge
 {
+    using System;
+    using System.Collections.Generic;
     using Microsoft.Psi;
     using Microsoft.Psi.Components;
     using RosSharp.RosBridgeClient;
-    using System.Collections.Generic;
 
     public class RosSharpBridge : ISourceComponent
     {
