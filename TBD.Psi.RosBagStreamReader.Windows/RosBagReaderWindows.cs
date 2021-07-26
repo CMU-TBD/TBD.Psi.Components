@@ -11,6 +11,10 @@ namespace TBD.Psi.RosBagStreamReader
             : base()
         {
             this.AddDeserializer(new SensorMsgsCompressedImageAsSharedEncodedImageDeserializer(true), "compressed");
+
+            // visualization_msgs
+            this.AddDeserializer(new VisualizationMsgsMarkerArrayDeserializer());
+            this.AddDeserializer(new VisualizationMsgsMarkerDeserializer());
         }
     }
 }
