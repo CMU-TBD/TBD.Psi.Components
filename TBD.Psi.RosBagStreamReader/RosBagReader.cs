@@ -212,10 +212,14 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new SensorMsgsCompressedImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsJointStateDeserializer(true));
             this.AddDeserializer(new SensorMsgsCameraInfoDeserializer(true));
+            this.AddDeserializer(new SensorMsgsPointCloudDeserializer());
+            this.AddDeserializer(new SensorMsgsPointCloud2Deserializer());
+            this.AddDeserializer(new SensorMsgsPointFieldDeserializer());
 
             // geometry_msgs
             this.AddDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
             this.AddDeserializer(new GeometrymsgsPointDeserializer());
+            this.AddDeserializer(new GeometrymsgsPoint32Deserializer());
             this.AddDeserializer(new GeometrymsgsPoseDeserializer());
             this.AddDeserializer(new GeometrymsgsQuaternionDeserializer());
             this.AddDeserializer(new GeometrymsgsTransformDeserializer());
