@@ -6,7 +6,7 @@ using System.Text;
 namespace TBD.Psi.RosBagStreamReader
 {
     using System.Linq;
-    using Deserailizers;
+    using Deserializers;
     using Microsoft.Psi;
     using TBD.Psi.RosBagStreamReader.Deserializers;
 
@@ -224,6 +224,9 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new GeometrymsgsQuaternionDeserializer());
             this.AddDeserializer(new GeometrymsgsTransformDeserializer());
             this.AddDeserializer(new GeometrymsgsVector3Deserializer());
+
+            // visualization_msgs
+            this.AddDeserializer(new VisualizationMsgsMarkerDeserializer());
 
             // others
             this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());

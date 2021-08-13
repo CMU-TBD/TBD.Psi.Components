@@ -25,14 +25,16 @@
 
         public static List<AzureKinectBody> Deserialize(byte[] data, ref int offset)
         {
+            /*  The following deserializer reads in a MarkerArray with a size of 32 * n, where n is the
+             *  number of bodies captured by the Azure Kinect. It creates an AzureKinectBody object for each
+             *  32 joint interval, correcting the orientation of each joint in the process.
+             */
             List<AzureKinectBody> bodies = new List<AzureKinectBody>();
-            int num_bodies = (int)BitConverter.ToInt32(data, offset) / Skeleton.JointCount;
-            offset += 4;
+            int num_bodies = Helper.ReadRosBaseType<Int32>(data, out offset, offset) / Skeleton.JointCount;
             for (int i = 0; i < num_bodies; i++) {
                 AzureKinectBody body = new AzureKinectBody();
                 for (int j = 0; j < Skeleton.JointCount; j++) {
                     var info = VisualizationMsgsMarkerDeserializer.Deserialize(data, ref offset);
-                    int id = info.id;
                     CoordinateSystem pose = new CoordinateSystem(KinectBasisInverted * info.pose * KinectBasis);
                     body.Joints[(JointId)j] = (pose, JointConfidenceLevel.Medium);
                 }

@@ -23,23 +23,25 @@
 
         public static List<Point3D> Deserialize(byte[] data, ref int offset)
         {
+            /*  The following deserializer extracts the geometry_msgs/Point32 points variable from
+             *  the PointCloud ROS message and returns a list of Point3D. The ChannelFloat32[] channels
+             *  variable is ignored but can be readily implemented.
+             */
             (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out offset, offset);
-            List<Point3D> points = new List<Point3D>();
 
-            int num_points = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
-            for (int i = 0; i < num_points; i++) {
+            List<Point3D> points = new List<Point3D>();
+            int size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            for (int i = 0; i < size; i++) {
                 Point3D point = GeometrymsgsPoint32Deserializer.Deserialize(data, ref offset);
                 points.Add(point);
             }
 
-            // The following portion is for getting color data from the ChannelFloat32.msg
-            // However, we won't implement it as Psi does not give us a way to color individual points
-            int channels_size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
-            for (int i = 0; i < channels_size; i++) {
-                _ = Helper.ReadRosBaseType<String>(data, out offset, offset);
-                int values_size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            for (int i = 0; i < size; i++) {
+                _ = Helper.ReadRosBaseType<String>(data, out offset, offset);               // string name
+                int values_size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);  // size of float32[] values
                 for (int j = 0; j < values_size; j++) {
-                    _ = Helper.ReadRosBaseType<float>(data, out offset, offset);
+                    _ = Helper.ReadRosBaseType<float>(data, out offset, offset);            // values[j]
                 }
             }
             return points;

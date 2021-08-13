@@ -18,49 +18,56 @@
 
         public static CameraIntrinsics Deserialize(byte[] data, ref int offset)
         {
-            int height = (int)BitConverter.ToInt32(data, offset);
-            int width = (int)BitConverter.ToInt32(data, offset + 4);
-            offset += 4 + 4;
-            String distortion_model = Helper.ReadRosBaseType<String>(data, out offset, offset); // can either be "plumb_bob" or "rational_polynomial" or "equidistant"
-            int D_length = (int)BitConverter.ToInt32(data, offset);
-            offset += 4;
-            float[] D = new float[D_length]; // distortion parameters, For "plumb_bob", the 5 parameters are: (k1, k2, t1, t2, k3)
-            int i, k;
-            for (i = 0; i < D_length; i++)
-            {
-                D[i] = Helper.ReadRosBaseType<float>(data, out offset, offset);
+            /*  The following deserializer extracts a CameraIntrinsics object from the available information
+             *  in a given sensor_msgs/CameraInfo ROS message.
+             */
+            int height = Helper.ReadRosBaseType<Int32>(data, out offset, offset);   // uint32 height
+            int width = Helper.ReadRosBaseType<Int32>(data, out offset, offset);    // uint32 width
+            _ = Helper.ReadRosBaseType<string>(data, out offset, offset);           // string distortion_model
+
+            // The distortion parameters, size depending on the distortion model
+            // float64[] D
+            int size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            for (int i = 0; i < size; i++) {
+                _ = Helper.ReadRosBaseType<float>(data, out offset, offset); // D[i]
             }
-            offset += 4; // the following array K has size 9, no need to read length
-            double[,] transform = new double[3, 3]; // intrinsic camera matrix for the raw images
-            for (i = 0, k = -1; i < 9; i++)
-            {
-                if (i % 3 == 0)
-                {
+
+            // Intrinsic camera matrix for the raw (distorted) images.
+            // float64[9] K
+            size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            double[,] transform = new double[3, 3]; 
+            for (int i = 0, k = -1; i < size; i++) {
+                if (i % 3 == 0) {
                     k++;
                 }
-                float c = Helper.ReadRosBaseType<float>(data, out offset, offset);
-                transform[k, i % 3] = (double)c;
+                transform[k, i % 3] = (double)Helper.ReadRosBaseType<float>(data, out offset, offset);
             }
-            var M = Matrix<double>.Build;
-            Matrix<double> camera_matrix = M.DenseOfArray(transform);
+            Matrix<double> camera_matrix = Matrix<double>.Build.DenseOfArray(transform);
 
-            offset += 4; // the following array R has size 9, no need to read length
-            float[] R = new float[9]; // Rectification matrix
-            for (i = 0; i < 9; k++)
-            {
-                R[i] = Helper.ReadRosBaseType<float>(data, out offset, offset);
+            // Rectification matrix (stereo cameras only)
+            // float64[9] R
+            size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            for (int i = 0; i < 9; i++) {
+                _ = Helper.ReadRosBaseType<float>(data, out offset, offset); // R[i]
             }
-            offset += 4; // the following array P has size 12, no need to read length
-            float[] P = new float[12];
-            for (i = 0; i < D_length; i++)
-            {
-                P[i] = Helper.ReadRosBaseType<float>(data, out offset, offset);
+
+            // Projection/camera matrix
+            // float64[12] P, 3 x 4 row-major matrix
+            size = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            for (int i = 0; i < size; i++) {
+                _ = Helper.ReadRosBaseType<float>(data, out offset, offset); // P[i]
             }
-            int binning_x = (int)BitConverter.ToInt32(data, offset);
-            int binning_y = (int)BitConverter.ToInt32(data, offset + 4);
-            offset += 4 + 4 + 4 + 4 + 4 + 4 + 1; // the above integers + RegionOfInterest roi: 4 int32s and 1 bool
-            CameraIntrinsics cameraIntrinsics = new CameraIntrinsics(width, height, camera_matrix);
-            return cameraIntrinsics;
+            _ = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 binning_x
+            _ = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 binning_y
+
+            // Region Of Interest
+            _ = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 x_offset
+            _ = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 y_offset
+            _ = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 height
+            _ = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 width
+            _ = Helper.ReadRosBaseType<Boolean>(data, out offset, offset);      // bool do_rectify
+
+            return new CameraIntrinsics(width, height, camera_matrix);
         }
 
         public override T Deserialize<T>(byte[] data, ref Envelope env)

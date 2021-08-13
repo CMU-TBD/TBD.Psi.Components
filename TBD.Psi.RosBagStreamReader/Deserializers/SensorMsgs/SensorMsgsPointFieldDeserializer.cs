@@ -22,10 +22,14 @@
 
         public static (string name, int off, byte dtype, int count) Deserialize(byte[] data, ref int offset)
         {
-            var name = Helper.ReadRosBaseType<string>(data, out offset, offset);
-            var off = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
-            var dtype = Helper.ReadRosBaseType<Byte>(data, out offset, offset);
-            var count = Helper.ReadRosBaseType<Int32>(data, out offset, offset);
+            /*  The following deserializer extracts the four variables within a sensor_msgs/PointField ROS message
+             *  and returns them in order within a tuple. The four variables describe the name of the field, the offset
+             *  from the start of the point struct, the datatype enumeration, and how many elements are in the field, respectively.
+             */
+            string name = Helper.ReadRosBaseType<string>(data, out offset, offset);     // string name
+            int off = Helper.ReadRosBaseType<Int32>(data, out offset, offset);          // uint32 offset
+            byte dtype = Helper.ReadRosBaseType<Byte>(data, out offset, offset);        // uint8 datatype
+            int count = Helper.ReadRosBaseType<Int32>(data, out offset, offset);        // uint32 count
             return (name, off, dtype, count);
 
         }
