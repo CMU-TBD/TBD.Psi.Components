@@ -13,12 +13,12 @@
     using Microsoft.Azure.Kinect.BodyTracking;
     using System.Collections.Generic;
 
-    public class VisualizationMsgsMarkerArrayDeserializer : MsgDeserializer
+    public class VisualizationMsgsMarkerArrayAsAzureKinectBodyListDeserializer : MsgDeserializer
     {
         private static readonly CoordinateSystem KinectBasis = new CoordinateSystem(default, UnitVector3D.ZAxis, UnitVector3D.XAxis.Negate(), UnitVector3D.YAxis.Negate());
         private static readonly CoordinateSystem KinectBasisInverted = KinectBasis.Invert();
 
-        public VisualizationMsgsMarkerArrayDeserializer()
+        public VisualizationMsgsMarkerArrayAsAzureKinectBodyListDeserializer()
             : base(typeof(List<AzureKinectBody>).AssemblyQualifiedName, "visualization_msgs/MarkerArray")
         { 
         }
@@ -29,8 +29,8 @@
              *  number of bodies captured by the Azure Kinect. It creates an AzureKinectBody object for each
              *  32 joint interval, correcting the orientation of each joint in the process.
              */
-            List<AzureKinectBody> bodies = new List<AzureKinectBody>();
             int num_bodies = Helper.ReadRosBaseType<Int32>(data, out offset, offset) / Skeleton.JointCount;
+            List<AzureKinectBody> bodies = new List<AzureKinectBody>(num_bodies);
             for (int i = 0; i < num_bodies; i++) {
                 AzureKinectBody body = new AzureKinectBody();
                 for (int j = 0; j < Skeleton.JointCount; j++) {
