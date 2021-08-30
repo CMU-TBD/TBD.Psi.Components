@@ -21,18 +21,23 @@ namespace TBD.Psi.Visualization.Windows
     [VisualizationObject("URDF link")]
     public class URDFLinkVisualizationObject : ModelVisual3DVisualizationObject<(CoordinateSystem, Link)>
     {
-        private Dictionary<string, string> packageMapping = new Dictionary<string, string>(){
-                { "tbd_podi_description", @"D:\ROS\tbd_podi_description" },
-                { "baxter_description", @"D:\ROS\baxter_description" },
-                { "rethink_ee_description", @"D:\ROS\rethink_ee_description" }
-            };
+        private Dictionary<string, string> packageMapping = new Dictionary<string, string>();
         private bool initialized = false;
         private Win3D.ModelVisual3D model = null;
         private string linkName = "";
 
         public URDFLinkVisualizationObject()
         {
-
+            // Figure out a way add this path at runtime.
+            var rosWsPaths = new string[]
+            {
+                 @"D:\ROS",
+                 @"C:\opt",
+            };
+            foreach(var wsPath in rosWsPaths)
+            {
+                this.recursivePackagePathSearch(wsPath);
+            }
         }
 
         public override void NotifyPropertyChanged(string propertyName)
@@ -51,6 +56,36 @@ namespace TBD.Psi.Visualization.Windows
                 cs.Storage.At(0, 2), cs.Storage.At(1, 2), cs.Storage.At(2, 2), cs.Storage.At(3, 2),
                 cs.Storage.At(0, 3), cs.Storage.At(1, 3), cs.Storage.At(2, 3), cs.Storage.At(3, 3)
                 );
+        }
+
+        /// <summary>
+        /// Recursively traverse the file structure and find ROS Packages. If found
+        /// the path and name is added to the mapping.  
+        /// </summary>
+        /// <param name="currPath">Current Path to search.</param>
+        private void recursivePackagePathSearch(string currPath)
+        {
+            if (!Directory.Exists(currPath))
+            {
+                return;
+            }
+            // get all the files in this path
+            var files = Directory.GetFiles(currPath).Select(n => Path.GetFileName(n));
+            // Check if its a ROS Package
+            if (files.Contains("package.xml"))
+            {
+                // TODO: We should parse the xml instead of just assuming it is.
+                // get the package name
+                var packageName = Path.GetDirectoryName(currPath);
+                this.packageMapping[packageName] = currPath;
+                return;
+            }
+            // recursively traverse the sub paths.
+            foreach(var subPath in Directory.GetDirectories(currPath))
+            {
+                this.recursivePackagePathSearch(subPath);
+            }
+            
         }
 
         private string resolvePackageName(string fileName)
