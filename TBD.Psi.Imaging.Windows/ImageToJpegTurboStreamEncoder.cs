@@ -11,11 +11,11 @@ namespace TBD.Psi.Imaging.Windows
     /// <summary>
     /// Implements an image encoder for JPEG format.
     /// </summary>
-    public class ImageToJpegTruboStreamEncoder : IImageToStreamEncoder
+    public class ImageToJpegTurboStreamEncoder : IImageToStreamEncoder
     {
         private TJCompressor compressor;
 
-        public ImageToJpegTruboStreamEncoder()
+        public ImageToJpegTurboStreamEncoder()
         {
             this.compressor = new TJCompressor();
         }

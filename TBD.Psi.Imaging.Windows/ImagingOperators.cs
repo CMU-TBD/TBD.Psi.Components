@@ -16,7 +16,7 @@ namespace TBD.Psi.Imaging.Windows
         /// <returns>A producer that generates the JPEG images.</returns>
         public static IProducer<Shared<EncodedImage>> EncodeJpegTurbo(this IProducer<Shared<Image>> source, int quality = 90, DeliveryPolicy<Shared<Image>> deliveryPolicy = null)
         {
-            return source.Encode(new ImageToJpegTruboStreamEncoder { QualityLevel = quality }, deliveryPolicy);
+            return source.Encode(new ImageToJpegTurboStreamEncoder { QualityLevel = quality }, deliveryPolicy);
         }
 
         public static IProducer<Shared<EncodedImage>> EncodeJpegImageSharp(this IProducer<Shared<Image>> source, int quality = 90, DeliveryPolicy<Shared<Image>> deliveryPolicy = null)
