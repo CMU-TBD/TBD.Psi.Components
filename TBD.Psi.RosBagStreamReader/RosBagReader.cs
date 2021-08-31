@@ -211,6 +211,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new SensorMsgsImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsCompressedImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsJointStateDeserializer(true));
+            this.AddDeserializer(new SensorMsgsLaserScanDeserializer(true));
 
             // geometry_msgs
             this.AddDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
@@ -221,6 +222,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new GeometrymsgsVector3Deserializer());
 
             // others
+            this.AddDeserializer(new RosgraphMsgsLogDeserializer(false));
             this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());
             this.AddDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
             this.AddDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
@@ -284,7 +286,7 @@ namespace TBD.Psi.RosBagStreamReader
             }
 
             // if we finish reading all the chuncks in this bag & the next message is in the next bag
-            if (topicInfo.ChunkIndex >= topicInfo.ChunkPointerList[topicInfo.bagIndex].Count)
+            if (topicInfo.ChunkPointerList.ContainsKey(topicInfo.bagIndex) && topicInfo.ChunkIndex >= topicInfo.ChunkPointerList[topicInfo.bagIndex].Count)
             {
                 topicInfo.ChunkIndex = 0;
                 topicInfo.bagIndex++;
