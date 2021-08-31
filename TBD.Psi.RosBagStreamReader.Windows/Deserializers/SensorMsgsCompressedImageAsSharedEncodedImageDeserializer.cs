@@ -19,30 +19,12 @@
             this.jpegEncoder = new ImageToJpegStreamEncoder();
         }
 
-        private PixelFormat convertPixelFormat(System.Drawing.Imaging.PixelFormat pixelFormat)
-        {
-            switch (pixelFormat)
-            {
-                case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
-                    return PixelFormat.Gray_8bpp;
-                case System.Drawing.Imaging.PixelFormat.Format16bppGrayScale:
-                    return PixelFormat.Gray_16bpp;
-                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                    return PixelFormat.BGR_24bpp;
-                case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
-                    return PixelFormat.BGRX_32bpp;
-                default:
-                    return PixelFormat.Undefined;
-            }
-        }
 
         private (PixelFormat, IImageToStreamEncoder) ParseEncodedFormat(string format)
         {
-            // assuming it has the format "[ORIGINAL_ENCODING] ; [ENCODED_FORMAT] compressed"
-            var originalFormat = format.Split(';')[0].ToLower();
-            var encodedFormat = format.Split(';')[1].Trim().Split(' ')[0];
-            IImageToStreamEncoder decoder = null;
-            switch (encodedFormat.ToLower())
+            (var original, var encoded) = Windows.Deserializers.Helper.ParseRosCompressedFormatString(format);
+            IImageToStreamEncoder decoder;
+            switch (encoded.ToLower())
             {
                 case "png":
                     decoder = this.pngEncoder;
@@ -55,7 +37,7 @@
                     throw new NotSupportedException($"Unsupported format {format}");
             }
 
-            return (SensorMsgsHelper.EncodingToPsiPixelFormat(originalFormat), decoder);
+            return (SensorMsgsHelper.EncodingToPsiPixelFormat(original), decoder);
         }
 
         public override T Deserialize<T>(byte[] data, ref Envelope env)
@@ -64,12 +46,11 @@
             (_, var originTime, _) = Helper.ReadStdMsgsHeader(data, out var offset, 0);
             this.UpdateEnvelope(ref env, originTime);
 
-            var formatStrLength = (int)BitConverter.ToUInt32(data, offset);
-            var format = Encoding.UTF8.GetString(data, offset + 4, formatStrLength);
+            var format = Helper.ReadRosBaseType<string>(data, out offset, offset);
             // parse the format
             (var originalFormat, var encoder) = this.ParseEncodedFormat(format);
-
-            var dataArr = data.Skip(offset + formatStrLength + 4 + 4).ToArray();
+            // skip first 4 bytes which is the array length.
+            var dataArr = data.Skip(offset + 4).ToArray();
             var imageMemoryStream = new MemoryStream(dataArr);
             using (var image = System.Drawing.Image.FromStream(imageMemoryStream))
             {

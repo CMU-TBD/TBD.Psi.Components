@@ -30,6 +30,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBD.Psi.RosBagStreamReader.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBD.Psi.RosBagStreamReader.Windows", "TBD.Psi.RosBagStreamReader.Windows\TBD.Psi.RosBagStreamReader.Windows.csproj", "{C2F226EA-3CA5-4F6D-A121-69B6E5772616}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.TBD.Psi.Imaging.Windows", "Test.TBD.Psi.Imaging.NET\Test.TBD.Psi.Imaging.Windows.csproj", "{956D24B4-6232-4394-9AF0-E674C7059FCC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TBD.Psi.Sensors", "TBD.Psi.Sensors\TBD.Psi.Sensors.csproj", "{C22E1251-F833-44D9-9EA1-74A3BD5B810E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +80,14 @@ Global
 		{C2F226EA-3CA5-4F6D-A121-69B6E5772616}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2F226EA-3CA5-4F6D-A121-69B6E5772616}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2F226EA-3CA5-4F6D-A121-69B6E5772616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{956D24B4-6232-4394-9AF0-E674C7059FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956D24B4-6232-4394-9AF0-E674C7059FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956D24B4-6232-4394-9AF0-E674C7059FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956D24B4-6232-4394-9AF0-E674C7059FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C22E1251-F833-44D9-9EA1-74A3BD5B810E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C22E1251-F833-44D9-9EA1-74A3BD5B810E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C22E1251-F833-44D9-9EA1-74A3BD5B810E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C22E1251-F833-44D9-9EA1-74A3BD5B810E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

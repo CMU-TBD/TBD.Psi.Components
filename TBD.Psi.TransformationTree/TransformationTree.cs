@@ -41,6 +41,20 @@ namespace TBD.Psi.TransformationTree
             return poseList;
         }
 
+ 
+        public double[] GetTreeExtent(T root, CoordinateSystem rootPose = null)
+        {
+            // get a list of all the poses 
+            var csList = this.TraverseTree(root, rootPose);
+            // get the min/max of X,Y,Z.
+            return new double[]
+            {
+                csList.OrderByDescending(cs => cs.Item2.Origin.X).First().Item2.Origin.X - csList.OrderBy(cs => cs.Item2.Origin.X).First().Item2.Origin.X,
+                csList.OrderByDescending(cs => cs.Item2.Origin.Y).First().Item2.Origin.Y - csList.OrderBy(cs => cs.Item2.Origin.Y).First().Item2.Origin.Y,
+                csList.OrderByDescending(cs => cs.Item2.Origin.Z).First().Item2.Origin.Z - csList.OrderBy(cs => cs.Item2.Origin.Z).First().Item2.Origin.Z,
+            };
+        }
+
         public bool UpdateTransformation(T frameA, T frameB, double[,] mat)
         {
             return this.UpdateTransformation(frameA, frameB, new CoordinateSystem(Matrix<double>.Build.DenseOfArray(mat)));
