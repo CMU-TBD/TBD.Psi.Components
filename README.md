@@ -15,3 +15,7 @@ These are independent components developed by our lab for Psi Developements. The
 |[TBD.Psi.RosBagStreamReader.Windows](TBD.Psi.RosBagStreamReader.Windows/)|Windows|net472|A Windows specific PsiStream Reader for ROS Bags|
 |[TBD.Psi.RosSharpBridge.Windows](TBD.Psi.RosSharpBridge.Windows/README.md)|Windows|net472|A Psi wrapper for [ROS #](https://github.com/siemens/ros-sharp)|
 |[TBD.Psi.TransformationTree](TBD.Psi.TransformationTree/README.md)|Windows/Linux|netstandard2.0|A spatial transformation frame representation.|
+
+# Development
+## Local Source vs Nuget Package.
+From our experience, a mixing of Psi Nuget and locally reference Psi source packages always leads to build errors. This repostiory provides a `Local` configuration that references Psi source packages instead of the Nuget package. This is useful if your Psi framework is different from the latest version of the Psi Nuget packages. To switch between the references, change the project's configuration (local <-> debug).

@@ -1,15 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Psi.Imaging.Windows" Version="0.15.49.1-beta" />
-  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Configurations>Debug;Release;Local</Configurations>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Local'">
+      <ItemGroup>
+        <ProjectReference Include="..\..\psi\Sources\Imaging\Microsoft.Psi.Imaging.Windows\Microsoft.Psi.Imaging.Windows.csproj" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)' != 'Local'">
+      <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.Imaging.Windows" Version="0.15.49.1-beta" />
+      </ItemGroup>
+    </When>
+  </Choose>
 
   <ItemGroup>
     <ProjectReference Include="..\TBD.Psi.RosBagStreamReader\TBD.Psi.RosBagStreamReader.csproj" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-  </PropertyGroup>
-
+  
 </Project>
