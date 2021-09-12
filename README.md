@@ -16,6 +16,7 @@ These are independent components developed by our lab for Psi Developements. The
 |[TBD.Psi.RosBagStreamReader.Windows.x64](TBD.Psi.RosBagStreamReader.Windows.x64/)|Windows x64|net472|A Windows x64 specific PsiStream Reader for ROS Bags|
 |[TBD.Psi.RosSharpBridge.Windows](TBD.Psi.RosSharpBridge.Windows/README.md)|Windows|net472|A Psi wrapper for [ROS #](https://github.com/siemens/ros-sharp)|
 |[TBD.Psi.TransformationTree](TBD.Psi.TransformationTree/README.md)|Windows/Linux|netstandard2.0|A spatial transformation frame representation.|
+|[TBD.Psi.Sensors](TBD.Psi.Sensors/README.md)|Windows/Linux|netstandard2.0|A collections of classes that represent/operate on Sensor (e.g. LaserScan) data|
 
 # Development
 ## Local Source vs Nuget Package.
