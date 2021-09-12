@@ -15,3 +15,8 @@ These are independent components developed by our lab for Psi Developements. The
 |[TBD.Psi.RosBagStreamReader.Windows](TBD.Psi.RosBagStreamReader.Windows/)|Windows|net472|A Windows specific PsiStream Reader for ROS Bags|
 |[TBD.Psi.RosSharpBridge.Windows](TBD.Psi.RosSharpBridge.Windows/README.md)|Windows|net472|A Psi wrapper for [ROS #](https://github.com/siemens/ros-sharp)|
 |[TBD.Psi.TransformationTree](TBD.Psi.TransformationTree/README.md)|Windows/Linux|netstandard2.0|A spatial transformation frame representation.|
+
+# Contributors:
+- [Victor Del Carpio](https://github.com/victor-hugo-dc)
+    - TBD.Psi.RosBagStreamReader
+    - TBD.Psi.RosBagStreamReader.Windows 
