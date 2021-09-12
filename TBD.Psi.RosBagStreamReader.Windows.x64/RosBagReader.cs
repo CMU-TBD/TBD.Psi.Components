@@ -1,17 +1,15 @@
 // Copyright (c) Carnegie Mellon University. All rights reserved.
 // Licensed under the MIT license.
 
-namespace TBD.Psi.RosBagStreamReader
+namespace TBD.Psi.RosBagStreamReader.Windows.x64
 {
     using TBD.Psi.RosBagStreamReader.Deserializers;
 
-    public class RosBagReaderWindows: RosBagReader
+    public class RosBagReader: Windows.RosBagReader
     {
-        public RosBagReaderWindows()
+        public RosBagReader()
             : base()
         {
-            this.AddDeserializer(new SensorMsgsCompressedImageAsSharedEncodedImageDeserializer(true), "compressed");
-
             // visualization_msgs
             this.AddDeserializer(new VisualizationMsgsMarkerArrayAsAzureKinectBodyListDeserializer(), "/body_tracking_data");
         }

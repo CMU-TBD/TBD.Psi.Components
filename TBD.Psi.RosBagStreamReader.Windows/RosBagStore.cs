@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Carnegie Mellon University. All rights reserved.
 // Licensed under the MIT license.
 
-namespace TBD.Psi.RosBagStreamReader
+namespace TBD.Psi.RosBagStreamReader.Windows
 {
     using Microsoft.Psi;
     public class RosBagStore

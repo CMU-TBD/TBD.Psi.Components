@@ -8,7 +8,6 @@ namespace TBD.Psi.RosBagStreamReader
     using System.Linq;
     using Deserializers;
     using Microsoft.Psi;
-    using TBD.Psi.RosBagStreamReader.Deserializers;
 
     public class RosBagReader
     {
@@ -211,6 +210,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new SensorMsgsImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsCompressedImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsJointStateDeserializer(true));
+            this.AddDeserializer(new SensorMsgsLaserScanDeserializer(true));
             this.AddDeserializer(new SensorMsgsCameraInfoDeserializer(true));
             this.AddDeserializer(new SensorMsgsPointCloudDeserializer());
             this.AddDeserializer(new SensorMsgsPointCloud2Deserializer());
@@ -229,6 +229,7 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new VisualizationMsgsMarkerDeserializer());
 
             // others
+            this.AddDeserializer(new RosgraphMsgsLogDeserializer(false));
             this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());
             this.AddDeserializer(new TBDAudioMsgsAudioDataStampedDeserializer(true));
             this.AddDeserializer(new TBDAudioMsgsVADStampedDeserializer(true));
@@ -292,7 +293,7 @@ namespace TBD.Psi.RosBagStreamReader
             }
 
             // if we finish reading all the chuncks in this bag & the next message is in the next bag
-            if (topicInfo.ChunkIndex >= topicInfo.ChunkPointerList[topicInfo.bagIndex].Count)
+            if (topicInfo.ChunkPointerList.ContainsKey(topicInfo.bagIndex) && topicInfo.ChunkIndex >= topicInfo.ChunkPointerList[topicInfo.bagIndex].Count)
             {
                 topicInfo.ChunkIndex = 0;
                 topicInfo.bagIndex++;

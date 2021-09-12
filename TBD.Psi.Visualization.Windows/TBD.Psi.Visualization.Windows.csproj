@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <Configurations>Debug;Release;Local</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\psi\Sources\Visualization\Microsoft.Psi.Visualization.Windows\Microsoft.Psi.Visualization.Windows.csproj" />
+    <ProjectReference Include="..\TBD.Psi.Sensors\TBD.Psi.Sensors.csproj" />
     <ProjectReference Include="..\TBD.Psi.Utility\TBD.Psi.Utility.csproj" />
   </ItemGroup>
 
