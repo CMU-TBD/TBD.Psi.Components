@@ -155,6 +155,8 @@ If the deserializer is framework specific, you can add it to either `TBD.Psi.Ros
 2. `tf` and `tf_static` will be parsed differently.
 
 ## Changelog
+#### 2021-09-12
+- Added deserialization support for topics and messages in Azure Kinect.
 #### 2021-07-20
 - Split into Windows and .NET 5.
 - Remove TF due to it being not stable.
