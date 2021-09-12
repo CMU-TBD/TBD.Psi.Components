@@ -11,6 +11,9 @@ namespace TBD.Psi.RosBagStreamReader
             : base()
         {
             this.AddDeserializer(new SensorMsgsCompressedImageAsSharedEncodedImageDeserializer(true), "compressed");
+
+            // visualization_msgs
+            this.AddDeserializer(new VisualizationMsgsMarkerArrayAsAzureKinectBodyListDeserializer(), "/body_tracking_data");
         }
     }
 }

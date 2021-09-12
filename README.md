@@ -19,3 +19,8 @@ These are independent components developed by our lab for Psi Developements. The
 # Development
 ## Local Source vs Nuget Package.
 From our experience, a mixing of Psi Nuget and locally reference Psi source packages always leads to build errors. This repostiory provides a `Local` configuration that references Psi source packages instead of the Nuget package. This is useful if your Psi framework is different from the latest version of the Psi Nuget packages. To switch between the references, change the project's configuration (local <-> debug).
+
+# Contributors:
+- [Victor Del Carpio](https://github.com/victor-hugo-dc)
+    - TBD.Psi.RosBagStreamReader
+    - TBD.Psi.RosBagStreamReader.Windows 

@@ -1,4 +1,4 @@
-namespace TBD.Psi.RosBagStreamReader.Deserailizers
+namespace TBD.Psi.RosBagStreamReader.Deserializers
 {
     using System;
     using Microsoft.Psi;
@@ -10,7 +10,7 @@ namespace TBD.Psi.RosBagStreamReader.Deserailizers
         {
         }
 
-        public double[] Deserialize(byte[] msgByteArr, ref int offset)
+        public static double[] Deserialize(byte[] msgByteArr, ref int offset)
         {
             var color = new double[4];
             color[0] = Helper.ReadRosBaseType<float>(msgByteArr, out offset, offset); // r
@@ -24,7 +24,7 @@ namespace TBD.Psi.RosBagStreamReader.Deserailizers
         public override T Deserialize<T>(byte[] msgByteArr, ref Envelope env)
         {
             var offset = 0;
-            return (T)(object) this.Deserialize(msgByteArr, ref offset);
+            return (T)(object)Deserialize(msgByteArr, ref offset);
         }
     }
 }
