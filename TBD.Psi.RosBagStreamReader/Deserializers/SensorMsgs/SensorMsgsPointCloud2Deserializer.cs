@@ -1,16 +1,8 @@
 ﻿namespace TBD.Psi.RosBagStreamReader.Deserializers
 {
     using System;
-    using System.Text;
-    using System.Linq;
     using Microsoft.Psi;
-    using Microsoft.Psi.Imaging;
-    using System.IO;
     using MathNet.Spatial.Euclidean;
-    using MathNet.Numerics.LinearAlgebra;
-    using Microsoft.Psi.AzureKinect;
-    using System.Diagnostics;
-    using Microsoft.Azure.Kinect.BodyTracking;
     using System.Collections.Generic;
 
     public class SensorMsgsPointCloud2Deserializer : MsgDeserializer

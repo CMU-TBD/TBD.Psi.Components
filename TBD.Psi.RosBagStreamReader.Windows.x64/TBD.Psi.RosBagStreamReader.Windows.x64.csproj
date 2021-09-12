@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Configurations>Debug;Release;Local</Configurations>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Local'">
+      <ItemGroup>
+        <ProjectReference Include="..\..\psi\Sources\Kinect\Microsoft.Psi.AzureKinect.x64\Microsoft.Psi.AzureKinect.x64.csproj" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)' != 'Local'">
+      <ItemGroup>
+        <PackageReference Include="Microsoft.Psi.AzureKinect.x64" Version="0.15.49.1-beta" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TBD.Psi.RosBagStreamReader.Windows\TBD.Psi.RosBagStreamReader.Windows.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Carnegie Mellon University. All rights reserved.
 // Licensed under the MIT license.
 
-namespace TBD.Psi.RosBagStreamReader
+namespace TBD.Psi.RosBagStreamReader.Windows
 {
     using System;
     using Microsoft.Psi.Data;
@@ -16,7 +16,7 @@ namespace TBD.Psi.RosBagStreamReader
             string partitionName = null)
         {
             return dataset.AddSessionFromStore(
-                new RosBagStreamReaderWindows(
+                new RosBagStreamReader(
                     storeName,
                     storePath),
                 sessionName,

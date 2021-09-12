@@ -8,7 +8,6 @@ namespace TBD.Psi.RosBagStreamReader
     using System.Linq;
     using Deserializers;
     using Microsoft.Psi;
-    using TBD.Psi.RosBagStreamReader.Deserializers;
 
     public class RosBagReader
     {

@@ -13,6 +13,7 @@ These are independent components developed by our lab for Psi Developements. The
 |[TBD.Psi.RosBagStreamReader](TBD.Psi.RosBagStreamReader/README.md)|Windows/Linux|netstandard2.0|Base PsiStream Reader for ROS Bags. Needs one of the two framework specific packages to work.|
 |[TBD.Psi.RosBagStreamReader.NET](TBD.Psi.RosBagStreamReader.NET)|Windows/Linux|net5.0|A .NET 5.0 PsiStream Reader for ROS Bags|
 |[TBD.Psi.RosBagStreamReader.Windows](TBD.Psi.RosBagStreamReader.Windows/)|Windows|net472|A Windows specific PsiStream Reader for ROS Bags|
+|[TBD.Psi.RosBagStreamReader.Windows.x64](TBD.Psi.RosBagStreamReader.Windows.x64/)|Windows x64|net472|A Windows x64 specific PsiStream Reader for ROS Bags|
 |[TBD.Psi.RosSharpBridge.Windows](TBD.Psi.RosSharpBridge.Windows/README.md)|Windows|net472|A Psi wrapper for [ROS #](https://github.com/siemens/ros-sharp)|
 |[TBD.Psi.TransformationTree](TBD.Psi.TransformationTree/README.md)|Windows/Linux|netstandard2.0|A spatial transformation frame representation.|
 
@@ -23,4 +24,4 @@ From our experience, a mixing of Psi Nuget and locally reference Psi source pack
 # Contributors:
 - [Victor Del Carpio](https://github.com/victor-hugo-dc)
     - TBD.Psi.RosBagStreamReader
-    - TBD.Psi.RosBagStreamReader.Windows 
+    - TBD.Psi.RosBagStreamReader.Windows.x64 

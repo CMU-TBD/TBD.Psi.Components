@@ -1,5 +1,5 @@
 ﻿# TBD.Psi.Sensors
-COPYRIGHT(C) 2020 - Transportation, Bots, and Disability Lab - CMU
+COPYRIGHT(C) 2021 - Transportation, Bots, and Disability Lab - CMU
 Code released under MIT.
 
 A Psi library with classes and function related to Sensors. Some code share similarity with ROS code for interoperation purposes.
