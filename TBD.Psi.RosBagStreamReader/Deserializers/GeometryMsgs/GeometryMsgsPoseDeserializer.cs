@@ -43,11 +43,7 @@
             // get Point
             var point = GeometrymsgsPointDeserializer.Deserialize(data, ref offset);
             // quaternion
-            var quaternion_x = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var quaternion_y = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var quaternion_z = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var quaternion_w = Helper.ReadRosBaseType<double>(data, out offset, offset);
-            var quaternion = new Quaternion(quaternion_w, quaternion_x, quaternion_y, quaternion_z);
+            var quaternion = GeometrymsgsQuaternionDeserializer.Deserialize(data, ref offset);
 
             return ConvertQuaternionToMatrix(quaternion, point);
         }

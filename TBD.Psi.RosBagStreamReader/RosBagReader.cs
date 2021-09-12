@@ -6,7 +6,7 @@ using System.Text;
 namespace TBD.Psi.RosBagStreamReader
 {
     using System.Linq;
-    using Deserailizers;
+    using Deserializers;
     using Microsoft.Psi;
     using TBD.Psi.RosBagStreamReader.Deserializers;
 
@@ -211,14 +211,22 @@ namespace TBD.Psi.RosBagStreamReader
             this.AddDeserializer(new SensorMsgsImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsCompressedImageDeserializer(true));
             this.AddDeserializer(new SensorMsgsJointStateDeserializer(true));
+            this.AddDeserializer(new SensorMsgsCameraInfoDeserializer(true));
+            this.AddDeserializer(new SensorMsgsPointCloudDeserializer());
+            this.AddDeserializer(new SensorMsgsPointCloud2Deserializer());
+            this.AddDeserializer(new SensorMsgsPointFieldDeserializer());
 
             // geometry_msgs
             this.AddDeserializer(new GeometrymsgsPoseStampedDeserializer(false));
             this.AddDeserializer(new GeometrymsgsPointDeserializer());
+            this.AddDeserializer(new GeometrymsgsPoint32Deserializer());
             this.AddDeserializer(new GeometrymsgsPoseDeserializer());
             this.AddDeserializer(new GeometrymsgsQuaternionDeserializer());
             this.AddDeserializer(new GeometrymsgsTransformDeserializer());
             this.AddDeserializer(new GeometrymsgsVector3Deserializer());
+
+            // visualization_msgs
+            this.AddDeserializer(new VisualizationMsgsMarkerDeserializer());
 
             // others
             this.AddDeserializer(new AudioCommonMsgsAudioDataDeserializer());
